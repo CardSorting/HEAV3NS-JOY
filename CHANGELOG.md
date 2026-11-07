@@ -15,6 +15,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `.editorconfig`, `.gitattributes`, `.nvmrc`, and a hardened `.gitignore`.
 - Optional `IWorkspaceScanner.pathExists()` (implemented by `NodeWorkspaceScanner`).
 
+- CI: OS matrix (macOS, Windows), `CI required checks passed` aggregate gate, package hygiene, SARIF code-scanning upload, CodeQL, tag-driven release workflow, Dependabot for actions.
+- `tests/cli-smoke.test.mjs` exercising every documented `--format`, SARIF/JSON validity, and `--explain`.
+- Docs: `GETTING_STARTED`, `GLOSSARY`, `CI_INTEGRATION`, `RELEASING`, root `SUPPORT.md`; MAINTAINER CI/release section.
+- `package.json`: repository/bugs/homepage/keywords/files/exports metadata and `npm run verify`.
+
 ### Fixed
 - `docs:check` and the test suite falsely reported `LICENSE` links as broken because the scanner skips extensionless files; links now fall back to a real filesystem existence check.
 

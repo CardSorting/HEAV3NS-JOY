@@ -26,6 +26,10 @@ Map of the **HEAV3NS-JOY** documentation system, modeled on LUMI's 1-to-1 verifi
 | [CONSTITUTION.md](CONSTITUTION.md) | The 5 immutable laws of the HEAV3NS-JOY substrate |
 | [CODEBASE_STANDARDS.md](CODEBASE_STANDARDS.md) | Repository layout, zone discipline, and AI-friendly coding rules |
 | [MAINTAINER.md](MAINTAINER.md) | Update checklist and `npm run docs:check` CI guardrails |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | 10-minute tutorial: audit, fix, enforce |
+| [GLOSSARY.md](GLOSSARY.md) | Definitions of every framework term and code prefix |
+| [CI_INTEGRATION.md](CI_INTEGRATION.md) | GitHub Actions, GitLab, hooks, editors, branch protection |
+| [RELEASING.md](RELEASING.md) | Versioning rules and release procedure |
 
 ### Architecture (`docs/architecture/`)
 

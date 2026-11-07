@@ -100,6 +100,8 @@ flowchart TB
 
 ## Start here
 
+New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term? See the [Glossary](GLOSSARY.md). To wire this into pipelines, see [CI & Tooling Integration](CI_INTEGRATION.md); to ship a version, see [Releasing](RELEASING.md).
+
 | Doc | Description |
 |-----|-------------|
 | [Repository README](../README.md) | 5-question operational entrypoint & 60-second quick reference card |
@@ -206,7 +208,7 @@ flowchart TB
 **Run full verification & documentation guardrails (repository root):**
 
 ```bash
-npm test                            # Run all 22 automated test suites (node:test)
+npm test                            # Run all 22 test suites + CLI smoke tests (node:test)
 npm run joy-check                   # Strict self-hosting Joyzoning & Spider audit
 npm run docs:check                  # Verify required docs, relative links, sections, and live metrics
 node ./bin/joy-check.mjs . --doctor # Run StabilityDoctor architectural health checkup

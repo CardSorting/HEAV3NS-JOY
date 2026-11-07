@@ -21,7 +21,7 @@ This map reflects the **actual** layout of the **HEAV3NS-JOY** workspace. Paths 
 | **`docs/`** | `UI` | Documentation hub, architecture maps, papers (`companion-brief`, `philosophy`, `whitepaper`), and `api/` reference |
 | **`configs/`** | `INFRASTRUCTURE` | Drop-in `stability.config.json`, `spider.spec.json`, `pre-commit-hook.sh`, and `github-action.yml` templates |
 | **`examples/`** | `DOMAIN`..`UI` | Self-contained `examples/typescript/` and `examples/polyglot/` (Python, Go, Rust) reference projects |
-| **`tests/`** | `UI` | 22 automated verification suites (`joyzoning.test.mjs`, `joyzoning-advanced.test.mjs`, `trinity-portability.test.mjs`) |
+| **`tests/`** | `UI` | 22 automated verification suites plus CLI smoke tests (`joyzoning.test.mjs`, `joyzoning-advanced.test.mjs`, `trinity-portability.test.mjs`, `cli-smoke.test.mjs`) |
 
 ---
 

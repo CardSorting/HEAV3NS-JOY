@@ -136,6 +136,9 @@ npm run docs:check                             # Documentation integrity & link 
 
 ## Testing
 
+Run `npm run verify` before pushing: it runs the same tests, self-audit, and docs check as CI (see [CI pipeline](docs/MAINTAINER.md#ci-pipeline--releases)). PRs need the `CI required checks passed` status and CODEOWNERS review. Need help? See [SUPPORT.md](SUPPORT.md).
+
+
 ```bash
 npm test                                       # Run all tests via node --test tests/*.test.mjs
 ```

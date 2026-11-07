@@ -49,9 +49,9 @@ The command exits non-zero only on **blocking** violations, so it is safe to use
 | You are... | Start here | Then |
 | :--- | :--- | :--- |
 | **Evaluating / stakeholder** | [Whitepaper](docs/papers/whitepaper.md), [Companion Brief](docs/papers/companion-brief.md), [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | [ROADMAP.md](ROADMAP.md), [CHANGELOG.md](CHANGELOG.md) |
-| **Developer adopting it** | [Adopting in existing projects](workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) | [Examples](examples/typescript/violations-and-fixes.md), [CLI reference](docs/api/cli.md) |
+| **Developer adopting it** | [Getting Started](docs/GETTING_STARTED.md), [Adopting in existing projects](workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) | [Examples](examples/typescript/violations-and-fixes.md), [CLI reference](docs/api/cli.md) |
 | **AI coding agent** | [AGENTS.md](AGENTS.md) (60-second protocol) | [Agent Stack](docs/AGENT_STACK.md), [Error codes](docs/api/errors.md) |
-| **Maintainer / contributor** | [CONTRIBUTING.md](CONTRIBUTING.md), [Maintainer guide](docs/MAINTAINER.md) | [Codebase standards](docs/CODEBASE_STANDARDS.md), [Code-to-doc map](docs/CODE_TO_DOC_MAP.md) |
+| **Maintainer / contributor** | [CONTRIBUTING.md](CONTRIBUTING.md), [Maintainer guide](docs/MAINTAINER.md), [Releasing](docs/RELEASING.md) | [Codebase standards](docs/CODEBASE_STANDARDS.md), [Code-to-doc map](docs/CODE_TO_DOC_MAP.md) |
 | **Security reviewer** | [SECURITY.md](SECURITY.md) | [Security best practices](docs/SECURITY_BEST_PRACTICES.md) |
 | **Integrating programmatically** | [Public API](docs/api/public-api.md) | [`src/index.mjs`](src/index.mjs) |
 
@@ -84,9 +84,10 @@ flowchart LR
 | Audit a project | `node bin/joy-check.mjs <path>` |
 | Add missing `[LAYER]` headers (preview first) | `node bin/joy-check.mjs <path> --heal --dry-run` |
 | Understand a violation | `node bin/joy-check.mjs --explain SPI-206` |
-| Gate CI / PRs | Copy [`configs/github-action.yml`](configs/github-action.yml) to `.github/workflows/` |
+| Gate CI / PRs | See [CI integration](docs/CI_INTEGRATION.md) (GitHub Actions, GitLab, hooks) |
 | Gate commits | Install [`configs/pre-commit-hook.sh`](configs/pre-commit-hook.sh) as `.git/hooks/pre-commit` |
 | Validate the docs | `npm run docs:check` |
+| Run everything CI runs | `npm run verify` |
 | See machine-readable output | `--format sarif\|github\|junit\|tap\|ndjson\|lsp\|compact\|markdown` or `--json` |
 
 ## Troubleshooting
@@ -109,6 +110,8 @@ flowchart LR
 **Will it block my team on stylistic issues?** No. Only hard architectural violations are blocking; everything else is an advisory.
 
 **Do I have to rename my folders?** No. Map existing layouts to zones in config.
+
+**Unfamiliar term?** See the [Glossary](docs/GLOSSARY.md). **Need help?** See [SUPPORT.md](SUPPORT.md).
 
 **Where do I report a security issue?** Privately, per [SECURITY.md](SECURITY.md).
 

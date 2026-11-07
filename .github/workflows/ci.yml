@@ -1,36 +1,99 @@
 # [LAYER: INFRASTRUCTURE]
-# Continuous integration: tests, self-conformance audit, and documentation guardrails.
+# Continuous integration: tests, self-conformance audit, documentation guardrails, and package hygiene.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
-    name: Node ${{ matrix.node }}
-    runs-on: ubuntu-latest
+    name: Test (Node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         node: ["18", "20", "22"]
+        include:
+          - os: macos-latest
+            node: "22"
+          - os: windows-latest
+            node: "22"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Unit tests
+      - name: Unit and CLI smoke tests
         run: npm test
-      - name: Joyzoning self-audit (blocking violations fail the build)
-        run: npm run joy-check
-      - name: Documentation guardrails
+
+  conformance:
+    name: Joyzoning self-audit and docs guardrails
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Joyzoning audit (blocking violations fail the build)
+        run: node ./bin/joy-check.mjs . --format github
+      - name: Publish audit summary
+        if: always()
+        run: node ./bin/joy-check.mjs . --format markdown --mermaid >> "$GITHUB_STEP_SUMMARY"
+      - name: Documentation guardrails (links, headers, live metrics)
         run: npm run docs:check
+
+  package:
+    name: Package hygiene
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Verify tarball contents
+        run: npm pack --dry-run
+
+  sarif:
+    name: Upload SARIF to code scanning
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: node ./bin/joy-check.mjs . --sarif > joyzoning.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        with:
+          sarif_file: joyzoning.sarif
+          category: joyzoning
+
+  ci-ok:
+    name: CI required checks passed
+    if: always()
+    needs: [verify, conformance, package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job failed or was cancelled
+        run: |
+          echo '${{ toJSON(needs) }}'
+          test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "false"

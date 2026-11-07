@@ -24,7 +24,7 @@ Run the zero-dependency documentation guardrail verifier from the repository roo
 ```bash
 npm run docs:check                  # Verify required docs, relative links, sections, and live metrics
 npm run joy-check                   # Verify 100% Joyzoning & Spider self-conformance across all files
-npm test                            # Run all 22 automated verification suites
+npm test                            # Run all 22 verification suites + CLI smoke tests
 ```
 
 ### What `npm run docs:check` (`bin/docs-check.mjs`) enforces
@@ -45,3 +45,16 @@ Whenever a major capability or architectural pass lands, update the three papers
 2. [papers/philosophy.md](papers/philosophy.md) — Doctrine-to-implementation table.
 3. [papers/whitepaper.md](papers/whitepaper.md) — Technical architecture and mathematical specification.
 
+
+---
+
+## CI pipeline & releases
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| [`ci.yml`](../.github/workflows/ci.yml) | push to `main`, PRs | Tests (Node 18/20/22 + macOS + Windows), self-audit, docs guardrails, package check, SARIF upload, aggregate `CI required checks passed` gate |
+| [`codeql.yml`](../.github/workflows/codeql.yml) | push, PR, weekly | CodeQL security analysis |
+| [`release.yml`](../.github/workflows/release.yml) | `v*.*.*` tag | Verified GitHub Release; see [RELEASING.md](RELEASING.md) |
+| [`dependabot.yml`](../.github/dependabot.yml) | weekly | Keeps GitHub Actions versions current |
+
+Run everything CI runs with `npm run verify`. See [CI_INTEGRATION.md](CI_INTEGRATION.md) for adopting these in other repositories.
