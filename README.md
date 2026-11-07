@@ -3,6 +3,8 @@
 
 > *"Do not build another place where agents run. Build something agents can learn from, carry away, and independently reproduce."*
 
+**In one sentence:** HEAV3NS-JOY keeps codebases (yours and your AI agents') architecturally honest, using a tiny convention plus a zero-dependency checker.
+
 **HEAV3NS-JOY** is an agnostic, agent-native, repository-distributed framework for software development based on **Joyzoning** (Architectural Sovereignty, Geographic Alignment, and Structural Entropy Control).
 
 It is **not** an agent harness, model router, runtime, or MCP server. It requires zero vendor lock-in, zero preinstalled skills, and zero external services. The repository itself is the propagation substrate: any capable coding agent or developer can inspect this repository, acquire the conventions in under 60 seconds, and apply or reproduce them in any codebase across any language.
@@ -16,6 +18,9 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 
 ## Table of Contents
 
+- [Why this exists](#why-this-exists)
+- [Philosophy](#philosophy)
+- [For AI Agents](#for-ai-agents)
 - [Quick Start](#quick-start-under-2-minutes)
 - [Find Your Path](#find-your-path)
 - [Zones at a Glance](#zones-at-a-glance)
@@ -27,6 +32,94 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 - [60-Second Quick Reference Card](#60-second-quick-reference-card)
 - [Progressive Discovery Map](#progressive-discovery-map)
 - [Contributing, Security & License](#contributing-security--license)
+
+## Why this exists
+
+Codebases rarely fail from one bad decision. They drift: a database call sneaks into business logic, a UI component imports a driver, two modules start importing each other. Reviews catch some of it; AI coding agents, which write fast and see only a slice of the repo, produce more of it.
+
+Joyzoning makes architecture **checkable instead of aspirational**. Every file declares which of five zones it belongs to, its folder must agree, and imports may only flow in allowed directions. A small, dependency-free tool verifies this in seconds, for humans in review and for agents mid-edit.
+
+### See it in 30 seconds
+
+```ts
+// src/domain/Order.ts   <- business rules live here
+/** [LAYER: DOMAIN] */
+import fs from "node:fs";            // BLOCKED (SPI-206): domain must do zero I/O
+
+// Fix: define a contract in the domain, implement it in infrastructure
+// src/domain/interfaces/IOrderRepository.ts
+/** [LAYER: DOMAIN] */
+export interface IOrderRepository { save(order: Order): Promise<void>; }
+
+// src/infrastructure/FileOrderRepository.ts
+/** [LAYER: INFRASTRUCTURE] */
+import fs from "node:fs";            // fine: I/O belongs here
+export class FileOrderRepository implements IOrderRepository { /* ... */ }
+```
+
+More before/after pairs: [`examples/typescript/violations-and-fixes.md`](examples/typescript/violations-and-fixes.md).
+
+## Philosophy
+
+1. **Teach by repository, not by platform.** The repo itself is the product. Read it, copy it, reproduce it. No harness, SDK, account, or service is required.
+2. **Declare identity, then verify it.** A one-line header per file turns architecture from tribal knowledge into data that tools (and models) can read.
+3. **Geography is meaning.** Where a file lives must match what it is.
+4. **Dependencies point toward contracts.** Business rules never know about databases or screens.
+5. **Block only what is truly structural.** Cycles, layer leaks, and domain I/O fail the build. Everything else is an advisory, so neither humans nor agents get stuck in repair loops.
+6. **Prefer compiler and test truth.** The validator is a guardrail, not a substitute for your type checker and tests.
+7. **Small, sharp modules.** Size caps and depth limits keep files comprehensible within a single context window.
+
+**Non-goals:** it is not a linter replacement, a formatter, a runtime, an agent framework, or an MCP server. It does not phone home.
+
+### How it works
+
+```mermaid
+flowchart LR
+  A["Declare: [LAYER] header per file"] --> B["Align: folder matches header"]
+  B --> C["Check: joy-check audits imports, cycles, size"]
+  C --> D{"Blocking violations?"}
+  D -- "no (exit 0)" --> E["Ship"]
+  D -- "yes (exit 1)" --> F["--explain, fix, re-check"]
+  F --> C
+```
+
+Deeper reading: [Whitepaper](docs/papers/whitepaper.md) · [Philosophy paper](docs/papers/philosophy.md) · [Canonical model](spec/00-CANONICAL-MODEL.md)
+
+## For AI Agents
+
+You do not need a plugin, MCP server, or custom harness. Do this:
+
+**1. Read, in order (about 60 seconds):** [`AGENTS.md`](AGENTS.md) then [`llms.txt`](llms.txt). Only open [`spec/`](spec/00-CANONICAL-MODEL.md) if a rule is ambiguous.
+
+**2. Before editing**, scope the check to what you will touch (cheap in tokens):
+
+```bash
+node bin/joy-check.mjs . --phase pre-edit --scope <file> --neighborhood 1 --format compact
+node bin/joy-check.mjs . --skeleton <file> --keep-symbol <name>    # read a file as signatures only
+```
+
+**3. While editing**, obey the invariants: one `[LAYER: <ZONE>]` header per file matching its folder; domain does no I/O; plumbing is stateless and imports nothing; ui never imports infrastructure; relative imports use at most 3 `../`; no import cycles; implement producers (plumbing, domain, infrastructure) before consumers (core, ui).
+
+**4. After editing**, verify and read only what fails:
+
+```bash
+node bin/joy-check.mjs . --phase post-edit --scope <file> --format compact
+node bin/joy-check.mjs --explain SPI-206      # rationale + before/after fix for any code
+npm run verify                                # this repo only: tests + audit + docs
+```
+
+**Decision rules for agents**
+
+| Situation | Do |
+| :--- | :--- |
+| Exit `0` | Done. Advisories (`[INFO]`) are optional |
+| Exit `1` | Fix each blocking finding; use `--explain <code>`; re-run. Stop after 3 failed attempts on the same finding and report it |
+| Exit `2` | You mis-invoked the tool (bad flag/path). Fix the command; never treat as pass |
+| Missing/misaligned headers | `--heal --dry-run`, review, then `--heal` |
+| Rule seems wrong | Do not weaken config to pass; report the finding and the file |
+| Core needs infrastructure | Add `I<Name>` in `src/domain/interfaces/`, implement in infrastructure, depend on the interface |
+
+Machine-readable outputs: `--format json|sarif|ndjson|lsp|compact`. Full agent stack: [docs/AGENT_STACK.md](docs/AGENT_STACK.md).
 
 ## Quick Start (under 2 minutes)
 

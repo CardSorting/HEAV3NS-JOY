@@ -1,0 +1,32 @@
+# HEAV3NS-JOY
+
+> Agnostic, agent-native framework (Joyzoning) that binds every source file to one of five architectural zones, verified by a zero-dependency Node.js CLI. Not a harness, runtime, or MCP server.
+
+## Start here
+- [AGENTS.md](AGENTS.md): 60-second operational protocol, the five coding rules, and the 8-point self-check
+- [README.md](README.md): overview, philosophy, quick start, agent decision rules
+
+## Core rules (summary)
+- Zones: DOMAIN (src/domain), CORE (src/core), INFRASTRUCTURE (src/infrastructure), PLUMBING (src/plumbing or src/utils), UI (src/ui)
+- Every file has a [LAYER: <ZONE>] header in its first 10,000 characters, matching its folder
+- Domain: no I/O, no imports from infrastructure/ui. Plumbing: stateless, imports no other zone. UI: never imports infrastructure
+- Relative imports: at most 3 "../". No runtime import cycles. Core depends on I<Name> interfaces in src/domain/interfaces/
+
+## Commands
+- Audit: `node bin/joy-check.mjs <dir>` (exit 0 pass, 1 blocking violations, 2 usage error)
+- Scoped, token-cheap: `node bin/joy-check.mjs . --phase pre-edit --scope <file> --neighborhood 1 --format compact`
+- Explain a code: `node bin/joy-check.mjs --explain SPI-206`
+- Fix headers: `node bin/joy-check.mjs <dir> --heal --dry-run`
+- This repo: `npm run verify`
+
+## Specification
+- [spec/00-CANONICAL-MODEL.md](spec/00-CANONICAL-MODEL.md)
+- [spec/01-SYNTAX-AND-HEADERS.md](spec/01-SYNTAX-AND-HEADERS.md)
+- [spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md](spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md)
+- [spec/04-ENFORCEMENT-AND-LENIENCY.md](spec/04-ENFORCEMENT-AND-LENIENCY.md)
+
+## Reference
+- [docs/api/cli.md](docs/api/cli.md), [docs/api/errors.md](docs/api/errors.md), [docs/GLOSSARY.md](docs/GLOSSARY.md)
+
+## Optional
+- [docs/papers/whitepaper.md](docs/papers/whitepaper.md), [docs/OPERATIONS.md](docs/OPERATIONS.md), [docs/MAINTAINER.md](docs/MAINTAINER.md)

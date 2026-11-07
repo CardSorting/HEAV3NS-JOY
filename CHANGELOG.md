@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `docs/OPERATIONS.md` operator runbook; expanded maintainer quick reference in `docs/MAINTAINER.md`; README "For Maintainers & Operators" section.
 
+- README: one-sentence summary, "Why this exists", 30-second before/after example, Philosophy and non-goals, workflow diagram, and a "For AI Agents" section with a pre/post-edit loop and decision rules. Added `llms.txt` (llmstxt.org convention) for agent discovery.
+
 ### Changed
 - `joy-check` now exits `2` (not `0`) for unknown options, invalid `--format`/`--theme`, and a missing target directory. Previously these silently produced a passing audit.
 - `joy-check --version` now reports the `package.json` version (was a hardcoded, drifted `1.2.0`).
