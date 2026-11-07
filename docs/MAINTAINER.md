@@ -58,3 +58,39 @@ Whenever a major capability or architectural pass lands, update the three papers
 | [`dependabot.yml`](../.github/dependabot.yml) | weekly | Keeps GitHub Actions versions current |
 
 Run everything CI runs with `npm run verify`. See [CI_INTEGRATION.md](CI_INTEGRATION.md) for adopting these in other repositories.
+
+---
+
+## Maintainer quick reference
+
+| Task | How |
+|------|-----|
+| Run everything CI runs | `npm run verify` |
+| Triage an issue | Reproduce with the reporter's command; label `bug`/`enhancement`; ask for `node -v` and output if missing |
+| Review a PR | Check the PR template boxes; confirm `CI required checks passed`; confirm new files have matching `[LAYER]` headers; confirm docs/CHANGELOG updated |
+| Merge Dependabot PRs | Merge when CI and CodeQL are green; grouped weekly, so review the diff of `uses:` lines only |
+| Cut a release | [RELEASING.md](RELEASING.md) |
+| Handle a security report | Follow [SECURITY.md](../SECURITY.md); fix privately, then release and disclose |
+| Help an operator | [OPERATIONS.md](OPERATIONS.md) runbook |
+
+### Add a diagnostic rule
+
+1. Define it in `src/domain/` (pure rule) and wire evaluation in `src/core/`.
+2. Add `--explain` content and a test (positive and negative case).
+3. Document in [api/errors.md](api/errors.md) and [`../spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md).
+4. Decide severity: new rules should ship as **advisories** in a minor release; promote to blocking only in a major.
+5. `npm run verify`, update the CHANGELOG.
+
+### Add a language
+
+Register the extension and comment syntax in `src/plumbing/commentStyles.mjs`, add scanner coverage and a test fixture, then document the header syntax in [`../spec/01-SYNTAX-AND-HEADERS.md`](../spec/01-SYNTAX-AND-HEADERS.md).
+
+### Recommended repository settings
+
+- Branch protection on `main`: require PR, CODEOWNERS review, and the `CI required checks passed` status.
+- Enable private vulnerability reporting and Dependabot alerts.
+- Disallow force pushes and branch deletion on `main`.
+
+### Definition of done
+
+Tests pass, `joy-check` reports 0 blocking violations, `docs:check` passes, CHANGELOG `[Unreleased]` updated, public behavior changes reflected in [api/cli.md](api/cli.md) or [api/public-api.md](api/public-api.md).

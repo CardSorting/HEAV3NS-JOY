@@ -40,3 +40,26 @@ describe("CLI smoke: documented output formats", () => {
     assert.match(r.stdout, /SPI-201/);
   });
 });
+
+describe("CLI hardening: usage errors never masquerade as a passing audit", () => {
+  const cases = [
+    ["missing target directory", ["/definitely/not/a/real/dir"]],
+    ["unknown option", [".", "--bogus"]],
+    ["invalid --format", [".", "--format", "xml"]],
+    ["invalid --theme", [".", "--theme", "nope"]]
+  ];
+  for (const [name, args] of cases) {
+    it(`${name} exits 2 with a stderr message`, () => {
+      const r = run(...args);
+      assert.equal(r.status, 2);
+      assert.match(r.stderr, /error:/);
+    });
+  }
+
+  it("--version matches package.json", async () => {
+    const { default: pkg } = await import("../package.json", { with: { type: "json" } }).catch(() => ({
+      default: JSON.parse(spawnSync("node", ["-p", "JSON.stringify(require('./package.json'))"], { cwd: root, encoding: "utf8" }).stdout)
+    }));
+    assert.equal(run("--version").stdout.trim(), pkg.version);
+  });
+});

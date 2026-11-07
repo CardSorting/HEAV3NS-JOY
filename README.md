@@ -20,6 +20,7 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 - [Find Your Path](#find-your-path)
 - [Zones at a Glance](#zones-at-a-glance)
 - [Common Tasks](#common-tasks)
+- [For Maintainers & Operators](#for-maintainers--operators)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 - [The Five Questions Every Agent Must Answer](#the-five-questions-every-agent-must-answer)
@@ -52,6 +53,7 @@ The command exits non-zero only on **blocking** violations, so it is safe to use
 | **Developer adopting it** | [Getting Started](docs/GETTING_STARTED.md), [Adopting in existing projects](workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) | [Examples](examples/typescript/violations-and-fixes.md), [CLI reference](docs/api/cli.md) |
 | **AI coding agent** | [AGENTS.md](AGENTS.md) (60-second protocol) | [Agent Stack](docs/AGENT_STACK.md), [Error codes](docs/api/errors.md) |
 | **Maintainer / contributor** | [CONTRIBUTING.md](CONTRIBUTING.md), [Maintainer guide](docs/MAINTAINER.md), [Releasing](docs/RELEASING.md) | [Codebase standards](docs/CODEBASE_STANDARDS.md), [Code-to-doc map](docs/CODE_TO_DOC_MAP.md) |
+| **Operator / CI owner** | [Operations Runbook](docs/OPERATIONS.md) | [CI integration](docs/CI_INTEGRATION.md), [CLI reference](docs/api/cli.md) |
 | **Security reviewer** | [SECURITY.md](SECURITY.md) | [Security best practices](docs/SECURITY_BEST_PRACTICES.md) |
 | **Integrating programmatically** | [Public API](docs/api/public-api.md) | [`src/index.mjs`](src/index.mjs) |
 
@@ -90,6 +92,19 @@ flowchart LR
 | Run everything CI runs | `npm run verify` |
 | See machine-readable output | `--format sarif\|github\|junit\|tap\|ndjson\|lsp\|compact\|markdown` or `--json` |
 
+## For Maintainers & Operators
+
+**Exit codes** (safe to gate on): `0` pass, `1` blocking violations, `2` usage/environment error (bad flag, bad path). Advisories never fail a build.
+
+| Role | Do this |
+| :--- | :--- |
+| **Operator** | Pin a release tag; run `--init`, then `--theme relaxed`, then `strict`. Confirm `Files Scanned` is non-zero. Runbook: [OPERATIONS.md](docs/OPERATIONS.md) |
+| **Maintainer** | `npm run verify` before every merge; triage, review, rule/language recipes in [MAINTAINER.md](docs/MAINTAINER.md) |
+| **Releaser** | Update CHANGELOG, bump version, push a `vX.Y.Z` tag: [RELEASING.md](docs/RELEASING.md) |
+| **On-call** | "CI red on joy-check" checklist in [OPERATIONS.md](docs/OPERATIONS.md#incident-checklist-ci-is-red-on-joy-check) |
+
+The tool is read-only unless you pass `--init`, `--heal`, or `--heal-stateless` (each supports `--dry-run`). It makes no network calls and has no telemetry.
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
@@ -100,6 +115,8 @@ flowchart LR
 | `SPI-201` circular dependency | Two modules import each other | Extract a contract to `domain/interfaces/` or a helper to `plumbing/` (`--explain SPI-201`) |
 | `docs:check` reports a broken link | Moved or renamed file | Fix the link; run `npm run docs:check` again |
 | `SyntaxError` on startup | Node older than 18 | Upgrade Node (`.nvmrc` pins 18) |
+| Exit code `2` | Bad flag, bad `--format`/`--theme`, or missing directory | Read the stderr message; see [Operations](docs/OPERATIONS.md#failure-modes) |
+| Green but `Files Scanned : 0` | Everything excluded | Review `exclude` / `.joyignore` |
 
 ## FAQ
 

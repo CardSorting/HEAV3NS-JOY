@@ -20,6 +20,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Docs: `GETTING_STARTED`, `GLOSSARY`, `CI_INTEGRATION`, `RELEASING`, root `SUPPORT.md`; MAINTAINER CI/release section.
 - `package.json`: repository/bugs/homepage/keywords/files/exports metadata and `npm run verify`.
 
+- `docs/OPERATIONS.md` operator runbook; expanded maintainer quick reference in `docs/MAINTAINER.md`; README "For Maintainers & Operators" section.
+
+### Changed
+- `joy-check` now exits `2` (not `0`) for unknown options, invalid `--format`/`--theme`, and a missing target directory. Previously these silently produced a passing audit.
+- `joy-check --version` now reports the `package.json` version (was a hardcoded, drifted `1.2.0`).
+
 ### Fixed
 - `docs:check` and the test suite falsely reported `LICENSE` links as broken because the scanner skips extensionless files; links now fall back to a real filesystem existence check.
 

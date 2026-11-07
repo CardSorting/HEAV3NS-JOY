@@ -36,7 +36,7 @@ node bin/joy-check.mjs . --theme strict
 node bin/joy-check.mjs . --theme relaxed
 node bin/joy-check.mjs . --theme safety
 ```
-Exits with code `0` when zero blocking violations exist under the selected theme, or `1` otherwise.
+Exits with code `0` when zero blocking violations exist under the selected theme, `1` when blocking violations exist, and `2` on usage or environment errors (unknown option, invalid `--format`/`--theme`, missing target directory). See [Exit codes](../OPERATIONS.md#exit-codes).
 
 ### 2. Initialize Project Configuration (`--init`)
 ```bash

@@ -100,7 +100,7 @@ flowchart TB
 
 ## Start here
 
-New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term? See the [Glossary](GLOSSARY.md). To wire this into pipelines, see [CI & Tooling Integration](CI_INTEGRATION.md); to ship a version, see [Releasing](RELEASING.md).
+New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term? See the [Glossary](GLOSSARY.md). To wire this into pipelines, see [CI & Tooling Integration](CI_INTEGRATION.md); to ship a version, see [Releasing](RELEASING.md). Running it in production pipelines? Use the [Operations Runbook](OPERATIONS.md).
 
 | Doc | Description |
 |-----|-------------|

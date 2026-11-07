@@ -27,6 +27,8 @@
  *   --version, -v            Print version
  */
 
+import { createRequire } from "node:module";
+import fs from "node:fs";
 import {
   runJoyAudit,
   runJoyCheckPhase,
@@ -49,7 +51,19 @@ import {
   formatStatsReport
 } from "../src/index.mjs";
 
-const CLI_VERSION = "1.2.0";
+const require = createRequire(import.meta.url);
+const CLI_VERSION = require("../package.json").version;
+
+/** Exit codes: 0 = conforms, 1 = blocking violations, 2 = usage or environment error. */
+const EXIT_USAGE = 2;
+const VALID_FORMATS = ["text", "compact", "json", "sarif", "github", "markdown", "lsp", "tap", "junit", "ndjson"];
+const VALID_THEMES = ["strict", "relaxed", "safety"];
+
+function usageError(message) {
+  console.error(`[HEAV3NS-JOY] error: ${message}`);
+  console.error("Run `joy-check --help` for usage.");
+  process.exitCode = EXIT_USAGE;
+}
 
 function printHelp() {
   console.log(
@@ -105,6 +119,7 @@ function parseArgs(argv) {
   let theme = undefined;
   let help = false;
   let version = false;
+  const unknown = [];
 
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
@@ -176,6 +191,8 @@ function parseArgs(argv) {
       theme = arg.slice("--theme=".length);
     } else if (!arg.startsWith("-")) {
       targetDir = arg;
+    } else {
+      unknown.push(arg);
     }
   }
 
@@ -198,7 +215,8 @@ function parseArgs(argv) {
     mermaid,
     theme,
     help,
-    version
+    version,
+    unknown
   };
 }
 
@@ -213,8 +231,25 @@ function main() {
     console.log(CLI_VERSION);
     return;
   }
+  if (opts.unknown.length > 0) {
+    usageError(`unknown or incomplete option(s): ${opts.unknown.join(", ")}`);
+    return;
+  }
+  if (!VALID_FORMATS.includes(opts.format)) {
+    usageError(`invalid --format "${opts.format}" (expected one of: ${VALID_FORMATS.join(", ")})`);
+    return;
+  }
+  if (opts.theme !== undefined && !VALID_THEMES.includes(opts.theme)) {
+    usageError(`invalid --theme "${opts.theme}" (expected one of: ${VALID_THEMES.join(", ")})`);
+    return;
+  }
   if (opts.problemMatcher) {
     console.log(JSON.stringify(exportProblemMatcherConfig(), null, 2));
+    return;
+  }
+  const needsTarget = !opts.explain && !opts.problemMatcher;
+  if (needsTarget && !(fs.existsSync(opts.targetDir) && fs.statSync(opts.targetDir).isDirectory())) {
+    usageError(`target directory not found: ${opts.targetDir}`);
     return;
   }
   if (opts.init) {
