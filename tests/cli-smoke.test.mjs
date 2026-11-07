@@ -8,6 +8,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -56,10 +57,8 @@ describe("CLI hardening: usage errors never masquerade as a passing audit", () =
     });
   }
 
-  it("--version matches package.json", async () => {
-    const { default: pkg } = await import("../package.json", { with: { type: "json" } }).catch(() => ({
-      default: JSON.parse(spawnSync("node", ["-p", "JSON.stringify(require('./package.json'))"], { cwd: root, encoding: "utf8" }).stdout)
-    }));
+  it("--version matches package.json", () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
     assert.equal(run("--version").stdout.trim(), pkg.version);
   });
 });

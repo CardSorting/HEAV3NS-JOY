@@ -1,0 +1,18 @@
+{
+  "name": "joy",
+  "version": "1.0.0",
+  "description": "Joyzoning architecture audits, durable queue/db tools, and specialist swarms for agents",
+  "author": {
+    "name": "CardSorting"
+  },
+  "homepage": "https://github.com/CardSorting/HEAV3NS-JOY",
+  "repository": "https://github.com/CardSorting/HEAV3NS-JOY",
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "joyzoning",
+    "agents",
+    "mcp",
+    "swarm"
+  ]
+}

@@ -11,31 +11,35 @@ Three documents describe the **HEAV3NS-JOY** framework — both its **Spatial Ar
 
 ## One-line summary
 
-**HEAV3NS-JOY** is an agnostic, zero-dependency, repository-distributed software development framework that binds codebases to **5 Canonical Architectural Zones** (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `PLUMBING`, `UI`) and governs agentic execution via **JoyRide** (bounded 11-point cache), **Spider** (Merkle reality parity & AST skeletonization), and **BroccoliDB** (sharded SHA-256 CAS & causal `RuntimeStateGraph`).
+**HEAV3NS-JOY** is an agnostic, zero-dependency, repository-distributed software development framework that binds codebases to **5 Canonical Architectural Zones** (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `PLUMBING`, `UI`), governs agentic execution via **JoyRide** (bounded 11-point cache), **Spider** (Merkle reality parity & AST skeletonization), **BroccoliDB** (sharded SHA-256 CAS & causal `RuntimeStateGraph`), and the **Portable Broccoli Trinity** (`BroccoliQueue`, `BufferedDb`, `AgentSwarm`), and installs into any coding agent via `joy init` and `joy mcp`.
 
-## Two layers in this framework
+## Three surfaces in this framework
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│  Layer 1: Spatial Architecture (Joyzoning & Static Forensics) │
+│  Surface 1: Spatial Architecture (Joyzoning & Static Forensics│
 │  5 Zones · Principle of Geographic Alignment · SpiderEngine   │
 │  spec/00..04 · workflows/01..03 · src/domain/joyRules.mjs     │
 └──────────────────────────────┬────────────────────────────────┘
-                               │ IWorkspaceScanner · ICasStorage
+                               │ IWorkspaceScanner · ICasStorage · IBufferedStore
                                │ Spider Audit Reports & Hashes
 ┌──────────────────────────────▼────────────────────────────────┐
-│  Layer 2: Operational Substrate (JoyRide · Spider · Broccoli) │
+│  Surface 2: Operational Substrate & Portable Broccoli Trinity │
 │  11-Point Cache · Merkle SPI-006 · RTG-001..008 · Sharded CAS │
-│  spec/05 · workflows/04..05 · src/core/* · src/infrastructure/│
+│  BroccoliQueue · BufferedDb · AgentSwarm (SwarmFormationLedger│
+│  spec/05 · workflows/04..05 · docs/PORTABLE_TRINITY.md        │
+└──────────────────────────────┬────────────────────────────────┘
+                               │ bin/joy.mjs · bin/joy-trinity.mjs · src/portable.mjs
+┌──────────────────────────────▼────────────────────────────────┐
+│  Surface 3: Native Agent Tooling (Installer · MCP · SOUL.md)  │
+│  joy init (8 agents) · joy mcp (23 tools) · Skills · plugin/  │
 └───────────────────────────────────────────────────────────────┘
 ```
 
 ## Verify claims
 
 ```bash
-npm test
-npm run joy-check
-npm run docs:check
+npm run verify
 ```
 
 ## Related
@@ -43,6 +47,7 @@ npm run docs:check
 | Doc | Scope |
 |-----|-------|
 | [Architecture (current)](../architecture/current.md) | Module map & execution pipeline |
+| [Portable Broccoli Trinity](../PORTABLE_TRINITY.md) | `BroccoliQueue`, `BufferedDb`, and `AgentSwarm` shell & Node API |
 | [Project map](../PROJECT_MAP.md) | 1-to-1 directory paths |
-| [Public API](../api/public-api.md) | Frozen 84-symbol export surface |
-| [CLI reference](../api/cli.md) | `bin/joy-check.mjs` & `bin/docs-check.mjs` flags |
+| [Public API](../api/public-api.md) | Frozen 84-symbol export surface + `heav3ns-joy/portable` |
+| [CLI reference](../api/cli.md) | `bin/joy.mjs`, `bin/joy-check.mjs`, `bin/joy-trinity.mjs`, `bin/docs-check.mjs`, & MCP server |

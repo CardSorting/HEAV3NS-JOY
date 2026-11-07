@@ -1,12 +1,34 @@
 <!-- [LAYER: UI] -->
-# CLI Reference (`joy-check` & `docs-check`)
+# CLI Reference (`joy`, `joy-check`, `joy-trinity` & `docs-check`)
 
 ```bash
+node bin/joy.mjs <command> [options]
 node bin/joy-check.mjs [target-dir] [options]
+node bin/joy-trinity.mjs <command> [options]
 node bin/docs-check.mjs [target-dir]
 ```
 
-Both CLI binaries require **zero external dependencies** and run on any standard Node.js ($\ge 18$) environment.
+All four CLI binaries require **zero external dependencies** and run on any standard Node.js ($\ge 18$) environment.
+
+---
+
+## `joy` (`bin/joy.mjs`)
+
+Unified entrypoint (`npx heav3ns-joy` / `joy`) that installs and manages native agent tooling (`AGENTS.md`, `SOUL.md`, `CLAUDE.md`, `GEMINI.md`, skills, commands, subagents, editor rules, MCP servers, and optional hooks), runs a zero-dependency stdio MCP server, and forwards `joy check` and `joy trinity`.
+
+| Command | Purpose |
+| :--- | :--- |
+| `joy [init] [dir] [--agents all\|detected\|id,...] [--yes] [--dry-run] [--force] [--skip-mcp] [--hooks] [--runner CMD]` | Set up Joyzoning and Trinity for coding agents (`claude`, `gemini`, `antigravity`, `cursor`, `copilot`, `windsurf`, `codex`, `cline`) |
+| `joy add <agents...> [dir] [--dry-run] [--force] [--skip-mcp] [--hooks]` | Add agent targets to an existing installation |
+| `joy status [dir]` | Report installed version, targets, features, and per-file drift against `.joy/install.json` |
+| `joy update [dir] [--dry-run] [--force]` | Refresh managed files and blocks to the current version (conflict backups saved under `.joy/backup/`) |
+| `joy remove [dir] [--force]` | Remove managed blocks/JSON keys and owned files; modified files are kept unless `--force` is passed |
+| `joy doctor [dir] [--skip-mcp-check]` | Verify Node, `joy-check`, `joy-trinity`, `.joy/install.json`, file drift, and a live stdio MCP handshake |
+| `joy agents [dir]` | List supported agents and whether each was detected in the workspace |
+| `joy mcp [--root DIR] [--print-config] [--allow-outside-project]` | Run the stdio MCP server (23 `joy_*` tools, 5 `joy://` resources, 3 prompts) or print a ready-to-paste MCP config snippet |
+| `joy hook post-edit` | Read a `PostToolUse` JSON payload on stdin, run a neighborhood-scoped post-edit check, and exit `2` only on blocking violations |
+| `joy completion bash\|zsh` | Print a shell tab-completion script |
+| `joy check ...` / `joy trinity ...` | Passthrough to `bin/joy-check.mjs` and `bin/joy-trinity.mjs` |
 
 ---
 
@@ -104,3 +126,39 @@ node bin/docs-check.mjs
 ```
 Verifies that all required docs exist, start with valid `<!-- [LAYER: ...] -->` headers, contain zero broken relative links, include required `docs/README.md` sections and Mermaid diagrams, and match live codebase metrics.
 
+---
+
+## `joy-trinity` (`bin/joy-trinity.mjs`)
+
+Harness-agnostic shell interface to BroccoliQueue, BufferedDb, and AgentSwarm. Patterns follow `git`/`docker`/`npm`:
+`joy-trinity <command> <subcommand> [args] [--options]`, `--help` at any depth (or `joy-trinity help <command>`),
+`--opt value` or `--opt=value`, `--` to end options. The command model in [`src/ui/trinityCli.mjs`](../../src/ui/trinityCli.mjs) is the
+single source of truth for parsing, validation, help, suggestions, and completion; `joy-trinity --help` is authoritative.
+
+| Command | Purpose |
+| :--- | :--- |
+| `selftest` | Proves queue, BufferedDb, ledger, and swarm classification work in a throwaway directory |
+| `doctor` | Checks Node, state-directory permissions, lock holder, storage health, and swarm config; every problem has a fix |
+| `completion bash\|zsh` | Prints a shell completion script (`source <(joy-trinity completion bash)`) |
+| `queue add <name> [--data J] [--key K] [--attempts N] [--delay-ms N] [--priority N]` | Durable enqueue; `--key` makes it idempotent |
+| `queue list [--name Q] [--state S] [--limit N]` / `get` / `retry` / `cancel` / `delete` / `overview` / `pause` / `resume` / `prune` | Inspect and manage jobs |
+| `queue drain <name> --handler <module.mjs> [--timeout-ms N] [--concurrency N]` | Process jobs with a default-exported async handler until empty |
+| `db push <table> [--type insert\|upsert\|update\|delete] [--data J] [--where col=val] [--conflict col]` | Buffered write, flushed before exit; `update`/`delete` require `--where` |
+| `db select <table> [--where col=val] [--limit N] [--order col[:desc]]` | Read rows (equality, `!=`, `<`, `<=`, `>`, `>=`) |
+| `swarm classify --task T [--strategy S] [--max N] [--file F]` | Specialist roster and file partitions (writes nothing) |
+| `swarm plan --task T [--cwd D] [--strategy S] [--max N] [--file F] [--id ID]` (or `--data` with explicit `assignments`) | Create a durable, dependency-ordered formation |
+| `swarm next <id> [--peek] [--stale-after-ms N]` | Claim ready specialists (`--peek` is read-only); each has a complete `prompt`; `stale` lists claims with no report |
+| `swarm report <id> --assignment A --status completed\|failed [--summary T]` (`--summary -` reads stdin) | Record a specialist outcome; `Heuristic:` lines are persisted |
+| `swarm retry <id> --assignment A` / `status <id>` / `list` / `finish <id>` / `prune [--older-than-ms N] [--include-open]` | Retry, inspect, list, close out, and clean up formations |
+| `swarm run --task T --exec '["cmd","arg"]' [--cwd D] [--max N] [--strategy S] [--timeout-ms N]` | Run specialists as external processes (prompt on stdin and `$JOY_SWARM_PROMPT_FILE`; stdout = report; SIGTERM then SIGKILL on timeout) |
+| `swarm config` / `swarm knowledge store\|recall --cwd D [--note T]` | Effective swarm config; workspace heuristics |
+
+**Global options:** `--root <dir>` (or `$JOY_STATE_ROOT`, default `./.joy-state`), `--format json|ndjson|text` (or `$JOY_FORMAT`), `--lock-timeout-ms N`, `--help`, `--version`.
+
+**Output (json):** one document on stdout, `{"ok":true,"command","result"}` or `{"ok":false,"error":{"code","message","hint"?}}`. `ndjson` prints one document per line for lists; `text` prints tables and key/value lists, with errors on stderr.
+
+**Exit codes:** `0` success, `1` runtime failure, `2` usage error (unknown command/option, bad value, missing argument; the `hint` usually names the fix).
+
+**Error codes:** `USAGE`, `ROOT_LOCKED`, `NOT_FOUND`, `BUFFER_FULL`, or the leading code of the message (`FORMATION_NOT_FOUND`, `INVALID_FORMATION`, `INVALID_REPORT`, `FORMATION_INCOMPLETE`, …); otherwise `FAILURE`.
+
+**State safety:** each state-touching command takes an exclusive cross-process lock on `--root` (`.joy-lock`), so parallel invocations are serialized rather than corrupting the WAL; locks from crashed processes are reclaimed; Ctrl-C flushes and unlocks. Covered by `tests/joy-trinity-cli.test.mjs` and `tests/trinity-hardening.test.mjs`.

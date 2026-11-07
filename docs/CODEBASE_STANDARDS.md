@@ -9,13 +9,14 @@ Verified map — full detail in [Project map](PROJECT_MAP.md):
 
 | Directory | Zone | Role |
 |-----------|------|------|
-| `src/domain/` | `DOMAIN` | Pure Joyzoning rules (`joyRules.mjs`), BroccoliDB/Spider rules (`broccoliRules.mjs`), entropy/Martin/Gini math (`entropyFormulas.mjs`) |
-| `src/domain/interfaces/` | `DOMAIN` | Formal `IWorkspaceScanner` and `ICasStorage` contracts + `GuidedError` |
-| `src/core/` | `CORE` | `SpiderEngine`, `SpiderToolkit`, `StabilityDoctor`, `RefactorHealer`, `JoyRideCache`, `BroccoliRuntime`, `RuntimeStateGraph` |
-| `src/infrastructure/` | `INFRASTRUCTURE` | `NodeWorkspaceScanner` (filesystem) and `NodeCasStorage` (sharded SHA-256 CAS + RFC 1952 GZIP Wire Engine) |
-| `src/plumbing/` | `PLUMBING` | Stateless leaf helpers: `canonicalHash`, `codeTokenizer`, `sourceScanner`, `commentStyles`, `pathUtils` |
-| `src/ui/` | `UI` | `CliFormatter` and `AgentFormatters` (10 output formats + Mermaid + Stats) |
-| `bin/` | `UI` | `joy-check.mjs` (CLI validator/toolkit) and `docs-check.mjs` (documentation verifier) |
+| `src/domain/` | `DOMAIN` | Pure Joyzoning rules (`joyRules.mjs`), BroccoliDB/Spider rules (`broccoliRules.mjs`), entropy/Martin/Gini math (`entropyFormulas.mjs`), agent installer targets/templates (`agentTargets.mjs`, `agentTemplates.mjs`, `skillTemplates.mjs`), and BufferedDb/AgentSwarm domain logic (`bufferedDbOps.mjs`, `swarm*.mjs`) |
+| `src/domain/interfaces/` | `DOMAIN` | Formal `IWorkspaceScanner`, `ICasStorage`, `IBufferedStore`, `ISwarmLeaseService`, `ISwarmAgentEngine`, `ISwarmConfigStore`, and `IProjectFiles` contracts + `GuidedError` |
+| `src/core/` | `CORE` | `SpiderEngine`, `SpiderToolkit`, `StabilityDoctor`, `RefactorHealer`, `JoyRideCache`, `BroccoliRuntime`, `RuntimeStateGraph`, `BufferedDb`, `AgentSwarmDispatcher`, `SwarmFormationLedger`, `AgentInstaller`, and `mcp/McpServer` |
+| `src/infrastructure/` | `INFRASTRUCTURE` | `NodeWorkspaceScanner`, `NodeCasStorage`, `broccolidb/` (embedded SQLite-backed kernel + `broccolidb-table-query`), `broccoliqueue/` (durable job queue + `queue-helpers`), `BroccoliBufferedStore`, `ProcessAgentEngine`, `FileRootLock`, `NodeProjectFiles`, and `StdioMcpTransport` |
+| `src/plumbing/` | `PLUMBING` | Stateless leaf helpers: `canonicalHash`, `codeTokenizer`, `sourceScanner`, `commentStyles`, `pathUtils`, `ids`, `AsyncMutex`, `rowIds`, `cliArgs`, `managedBlocks` |
+| `src/ui/` | `UI` | `CliFormatter`, `AgentFormatters`, `JoyWizardPresenter`, and `joyCommands` |
+| `bin/` | `UI` | `joy.mjs` (unified CLI & installer), `joy-check.mjs` (validator/toolkit), `joy-trinity.mjs` (Portable Trinity shell CLI), and `docs-check.mjs` (documentation verifier) |
+| `plugin/` | `UI` / `CORE` | Pre-built Claude Code / agent marketplace plugin (`.claude-plugin/plugin.json`, `.mcp.json`, `skills/`, `agents/`, `hooks/`) |
 | `spec/` | `DOMAIN` | Language-agnostic normative specifications (`00`..`05`) |
 | `workflows/` | `CORE` | Operational playbooks and refactoring SOPs (`01`..`05`) |
 | `docs/` | `UI` | Documentation hub, architecture maps, papers, and `api/` reference |
@@ -42,7 +43,8 @@ Verified map — full detail in [Project map](PROJECT_MAP.md):
 
 | Mechanism | Command / File | Purpose |
 |-----------|----------------|---------|
-| **Agent Acquisition Protocol** | [`AGENTS.md`](../AGENTS.md) | 60-second operational protocol for any coding agent |
+| **Agent Acquisition Protocol** | [`AGENTS.md`](../AGENTS.md) & [`SOUL.md`](../SOUL.md) | 60-second operational protocol and operating principles for any coding agent |
+| **Native 8-Agent Installer** | `node bin/joy.mjs init <dir> --yes --hooks` | Non-destructively installs instructions, skills, hooks, `SOUL.md`, and MCP config |
 | **Config initialization** | `node bin/joy-check.mjs <dir> --init` | Scaffolds `stability.config.json` and `.joyignore` |
 | **Brownfield zone mapping** | [`configs/spider.spec.json`](../configs/spider.spec.json) | Maps legacy folder names onto the 5 canonical zones |
 | **Auto-healing headers & state** | `node bin/joy-check.mjs <dir> --heal --heal-stateless` | Aligns `[LAYER]` tags and heals `let`/`var` in `PLUMBING` |

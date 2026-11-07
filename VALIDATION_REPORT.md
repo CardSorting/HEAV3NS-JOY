@@ -9,21 +9,22 @@ This document records the verification evidence, self-conformance audit results,
 
 `HEAV3NS-JOY` is 100% self-hosting under its own Joyzoning rules in `strict` mode:
 
-- **Files Scanned**: `72` (including specification documents, workflows, the `docs/` hub & papers, reference validator modules across all 5 zones, portable CI/git-hook templates, TypeScript/ESM and Polyglot examples, and test suites)
+- **Files Scanned**: `182` (including specification documents, workflows, the `docs/` hub & papers, reference validator modules, Portable Broccoli Trinity modules, native agent installer & MCP server, marketplace `plugin/`, portable CI/git-hook templates, TypeScript/ESM and Polyglot examples, and test suites)
 - **Zone Distribution**:
-  - `DOMAIN`: `17` (`src/domain/`, `spec/`, `docs/CONSTITUTION.md`, and domain examples)
-  - `CORE`: `13` (`src/core/` including `SpiderEngine`, `SpiderToolkit`, `BroccoliRuntime`, `RuntimeStateGraph`, `StabilityDoctor`, `RefactorHealer`, `JoyRideCache`, `workflows/`, and core examples)
-  - `INFRASTRUCTURE`: `5` (`src/infrastructure/` including `NodeWorkspaceScanner`, `NodeCasStorage`, `configs/` templates, and infrastructure examples)
-  - `PLUMBING`: `7` (`src/plumbing/` including `canonicalHash`, `codeTokenizer`, `sourceScanner`, `commentStyles`, `pathUtils`, and plumbing examples)
-  - `UI`: `30` (`src/ui/` including `CliFormatter`, `AgentFormatters`, `bin/`, `docs/`, `README.md`, `AGENTS.md`, `VALIDATION_REPORT.md`, and UI examples/tests)
+  - `DOMAIN`: `37` (`src/domain/`, `src/domain/interfaces/`, `spec/`, `docs/CONSTITUTION.md`, and domain examples)
+  - `CORE`: `22` (`src/core/` including `SpiderEngine`, `SpiderToolkit`, `BroccoliRuntime`, `RuntimeStateGraph`, `StabilityDoctor`, `RefactorHealer`, `JoyRideCache`, `BufferedDb`, `AgentSwarmDispatcher`, `SwarmFormationLedger`, `AgentInstaller`, `McpServer`, `workflows/`, `plugin/skills/`, and core examples)
+  - `INFRASTRUCTURE`: `37` (`src/infrastructure/` including `NodeWorkspaceScanner`, `NodeCasStorage`, `broccolidb/`, `broccoliqueue/`, `BroccoliBufferedStore`, `ProcessAgentEngine`, `FileRootLock`, `NodeProjectFiles`, `StdioMcpTransport`, `configs/` templates, and infrastructure examples)
+  - `PLUMBING`: `11` (`src/plumbing/` including `canonicalHash`, `codeTokenizer`, `sourceScanner`, `commentStyles`, `pathUtils`, `ids`, `AsyncMutex`, `rowIds`, `cliArgs`, `managedBlocks`, and plumbing examples)
+  - `UI`: `75` (`src/ui/`, `bin/joy.mjs`, `bin/joy-check.mjs`, `bin/joy-trinity.mjs`, `bin/docs-check.mjs`, `docs/`, `README.md`, `AGENTS.md`, `SOUL.md`, `VALIDATION_REPORT.md`, `plugin/`, and UI examples/tests)
 - **Blocking Violations**: `0`
 - **Runtime Circular Dependencies (`SPI-201`)**: `0`
-- **Fat Module Warnings (`> 800` lines)**: `0` (every module in the repository is in Tier 1 Optimal `< 800` lines)
-- **Structural Entropy Score ($E_S$)**: `0.0072`
-- **Stability Index ($SI$)**: **`99% (SOVEREIGN)`**
-- **Build Health**: **`91% [Grade: A — SOVEREIGN]`**
-- **Automated Test Suite (`npm test`)**: **`22/22` suites (`29/29` test cases) passing** (`tests/joyzoning.test.mjs`, `tests/joyzoning-advanced.test.mjs`, and `tests/trinity-portability.test.mjs`)
-- **Documentation Guardrails (`npm run docs:check`)**: **`31` required docs, `32` markdown files (100% `[LAYER]` tagged), `156` relative links verified (`0` broken), live metrics in sync**
+- **Fat Module Warnings (`> 800` lines, `SPI-203`)**: `0` (every module in the repository is in Tier 1 Optimal `< 800` lines)
+- **Structural Entropy Score ($E_S$)**: `0.0037`
+- **Stability Index ($SI$)**: **`100% (SOVEREIGN)`**
+- **Build Health**: **`96% [Grade: A — SOVEREIGN]`**
+- **Automated Test Suite (`npm test`)**: **`22/22` test files (`36` logical suites, `196/196` test cases) passing**
+- **Documentation Guardrails (`npm run docs:check`)**: **`41` required docs, `52` markdown files (100% `[LAYER]` tagged), `321` relative links verified (`0` broken), live metrics in sync**
+- **Plugin Bundle Sync (`npm run plugin:check`)**: **`plugin/` marketplace bundle verified in sync with `src/domain/agentTargets.mjs`**
 
 ---
 
@@ -69,6 +70,9 @@ During testing and adversarial review, six concrete propagation/parsing edge cas
 9. **Pass 4 Zenith Tier — Atomic CAS & Path-Traversal Hardening, L1/L2 JoyRide Spillover, `SPI-108` Ghost Coupling, Multivariate Statistics (`--stats`), & Operator Projections**:
    - *Discovery*: Further hardening the Trinity substrate against crash-time partial writes, malicious CAS/snapshot path traversal (`../../`), memory pressure spikes during long agent sessions, hidden co-mutation coupling (`SPI-108`), and multi-line class method signatures required atomic temp-file writes + `fs.renameSync` in `INFRASTRUCTURE`, a 4-tier memory pressure valve with L2 `ICasStorage` spillover in `JoyRideCache`, Jaccard co-mutation and multivariate Z-score analysis in `entropyFormulas.mjs`, and dedicated operator projections (`timeline`, `nextActions`, `causalView`, `explainNode`, `migrateRuntimeGraph`, and 5 `replay` modes) in `RuntimeStateGraph.mjs` & `BroccoliRuntime.mjs`.
    - *Resolution*: Implemented and verified all Zenith capabilities across [`canonicalHash.mjs`](src/plumbing/canonicalHash.mjs), [`entropyFormulas.mjs`](src/domain/entropyFormulas.mjs), [`broccoliRules.mjs`](src/domain/broccoliRules.mjs), [`NodeCasStorage.mjs`](src/infrastructure/NodeCasStorage.mjs), [`NodeWorkspaceScanner.mjs`](src/infrastructure/NodeWorkspaceScanner.mjs), [`JoyRideCache.mjs`](src/core/JoyRideCache.mjs), [`RuntimeStateGraph.mjs`](src/core/RuntimeStateGraph.mjs), [`BroccoliRuntime.mjs`](src/core/BroccoliRuntime.mjs), [`SpiderToolkit.mjs`](src/core/SpiderToolkit.mjs), [`AgentFormatters.mjs`](src/ui/AgentFormatters.mjs), [`bin/joy-check.mjs`](bin/joy-check.mjs), and Suite 21 in [`tests/trinity-portability.test.mjs`](tests/trinity-portability.test.mjs).
+10. **Pass 5 Portable Broccoli Trinity, Native 8-Agent Installer (`joy`), Stdio MCP Server, & Template Literal Lexer Hardening**:
+   - *Discovery*: Operating `BroccoliQueue`, `BufferedDb`, and `AgentSwarm` across arbitrary agent harnesses without modifying the host harness required a shell-first JSON CLI ([`bin/joy-trinity.mjs`](bin/joy-trinity.mjs)) with cross-process `.joy-lock` PID locking ([`FileRootLock.mjs`](src/infrastructure/FileRootLock.mjs)), a durable step-by-step formation ledger ([`SwarmFormationLedger.mjs`](src/core/SwarmFormationLedger.mjs)), a shell-free subprocess engine ([`ProcessAgentEngine.mjs`](src/infrastructure/ProcessAgentEngine.mjs)), a `create-next-app`-style 8-agent installer ([`bin/joy.mjs`](bin/joy.mjs), [`AgentInstaller.mjs`](src/core/AgentInstaller.mjs)), a 23-tool stdio MCP server ([`McpServer.mjs`](src/core/mcp/McpServer.mjs)), and `templateBraceStack` expression lexing inside template literals (`${...}`) in [`codeTokenizer.mjs`](src/plumbing/codeTokenizer.mjs) so identifiers inside template interpolations never trigger false-positive `SPI-112` advisories.
+   - *Resolution*: Implemented and verified all modules under the 800-line Tier 1 cap (`broccolidb-table-query.mjs` and `queue-helpers.mjs` extracted for 0 `SPI-203` warnings), backed by 196 passing tests across 22 test files.
 
 
 

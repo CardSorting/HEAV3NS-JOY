@@ -6,6 +6,7 @@ Documentation for the **HEAV3NS-JOY** agnostic, agent-native software developmen
 <p align="center">
   <a href="papers/companion-brief.md">Companion brief</a> ·
   <a href="AGENT_STACK.md">Agent stack</a> ·
+  <a href="PORTABLE_TRINITY.md">Portable Trinity</a> ·
   <a href="PROJECT_MAP.md">Project map</a> ·
   <a href="CODE_TO_DOC_MAP.md">Code ↔ docs</a> ·
   <a href="MAINTAINER.md">Maintainer</a> ·
@@ -42,44 +43,50 @@ Workspace-verified figures from [papers/companion-brief.md](papers/companion-bri
 | External npm dependencies | **0** | [`package.json`](../package.json) |
 | Canonical architectural zones | **5** | `CANONICAL_ZONES` in [`src/domain/joyRules.mjs`](../src/domain/joyRules.mjs) |
 | Frozen public API exports | **84** | [`src/index.mjs`](../src/index.mjs) |
+| Portable Trinity & Agent exports | **23** | [`src/portable.mjs`](../src/portable.mjs) (`heav3ns-joy/portable`) |
+| Native agent installer targets | **8** | `claude`, `gemini`, `antigravity`, `cursor`, `copilot`, `windsurf`, `codex`, `cline` in [`src/domain/agentTargets.mjs`](../src/domain/agentTargets.mjs) |
+| Stdio MCP server surface | **23** tools · **5** resources · **3** prompts | [`src/core/mcp/McpServer.mjs`](../src/core/mcp/McpServer.mjs) (`joy mcp`) |
 | JoyRide bounded cache tiers | **5** | `JOYRIDE_KINDS` in [`src/core/JoyRideCache.mjs`](../src/core/JoyRideCache.mjs) |
 | BroccoliDB runtime modes | **6** | `RUNTIME_MODES` in [`src/domain/broccoliRules.mjs`](../src/domain/broccoliRules.mjs) |
 | CLI output formats (`--format`) | **10** | [`bin/joy-check.mjs`](../bin/joy-check.mjs) |
-| Automated verification suites | **22** | [`tests/`](../tests/joyzoning.test.mjs) |
+| Automated verification suites | **36** (`196` tests across `22` files) | [`tests/`](../tests/joyzoning.test.mjs) |
 
 ## How HEAV3NS-JOY differs
 
 | Typical agent harness / linter | HEAV3NS-JOY |
 |--------------------------------|-------------|
-| Locked to a specific IDE, model router, or MCP server | Repository-distributed convention + zero-dependency CLI & ESM API |
+| Locked to a specific IDE, model router, or MCP server | Repository-distributed convention (`AGENTS.md`, `SOUL.md`) + `joy init` 8-agent installer + zero-dependency CLI, MCP server, & ESM API |
 | Flat lint rules blind to architectural boundaries | 5-zone Sovereign Dependency Matrix (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `PLUMBING`, `UI`) |
 | Unbounded context reads & stale cache reuse | **JoyRide** 11-point fingerprint cache + AST skeletonization (`65%–85%` token reduction) |
 | Unverified file writes & opaque session history | **BroccoliDB** Proof-Before-Mutation (`RTG-003`), sharded SHA-256 CAS, and causal `replay()` |
+| Queue, database, and swarm locked inside a proprietary host | **Portable Broccoli Trinity** (`BroccoliQueue`, `BufferedDb`, `AgentSwarm`) operable from any shell via `joy-trinity` or `joy mcp` |
 
 ```mermaid
 flowchart TB
   subgraph docs ["docs/ — Navigation, Papers, & API Hub"]
     README["docs/README.md"]
-    STACK["AGENT_STACK.md"]
+    STACK["AGENT_STACK.md & PORTABLE_TRINITY.md"]
     MAP["PROJECT_MAP.md & CODE_TO_DOC_MAP.md"]
     PAP["papers/ (Brief · Philosophy · Whitepaper)"]
-    API["api/ (Public API · CLI · Errors)"]
+    API["api/ (Public API · CLI & MCP · Errors)"]
   end
-  subgraph conventions ["spec/ & workflows/ — Portable Conventions"]
+  subgraph conventions ["spec/, workflows/, & plugin/ — Portable Conventions & Skills"]
     SPEC["spec/00..05 (Canonical Model & Trinity)"]
     WF["workflows/01..05 (Triad Audit · SOPs · Playbooks)"]
+    PLUG["plugin/ & SOUL.md (Skills · Agents · Hooks)"]
   end
   subgraph code ["src/ & bin/ — Zero-Dependency Reference Implementation"]
-    DOM["src/domain/ (joyRules · broccoliRules · entropyFormulas)"]
-    CORE["src/core/ (Spider · JoyRide · BroccoliRuntime)"]
-    INFRA["src/infrastructure/ (NodeWorkspaceScanner · NodeCasStorage)"]
-    UI["src/ui/ & bin/ (joy-check · docs-check)"]
+    DOM["src/domain/ (joyRules · broccoliRules · agentTargets · swarm/db/queue)"]
+    CORE["src/core/ (Spider · JoyRide · BroccoliRuntime · AgentSwarm · AgentInstaller · McpServer)"]
+    INFRA["src/infrastructure/ (NodeWorkspaceScanner · NodeCasStorage · BroccoliQueue · BufferedDb · FileRootLock)"]
+    UI["src/ui/ & bin/ (joy · joy-check · joy-trinity · docs-check)"]
   end
   README --> STACK
   README --> PAP
   README --> API
   STACK --> SPEC
   STACK --> WF
+  STACK --> PLUG
   MAP -.->|1-to-1 lookup| code
   API -.->|documents| code
 ```
@@ -91,6 +98,9 @@ flowchart TB
 | File / directory | Doc |
 |------------------|-----|
 | `AGENTS.md` | [60-Second Agent Acquisition Protocol](../AGENTS.md) |
+| `SOUL.md` | [Operating Principles & Agent Constitution](../SOUL.md) |
+| `.joy/install.json` | [Native Agent Installer Manifest (`joy init` / `joy status`)](api/cli.md) |
+| `.joy-state/` | [Portable Broccoli Trinity State Directory (`joy-trinity`)](PORTABLE_TRINITY.md) |
 | `stability.config.json` | [Enforcement & Leniency](../spec/04-ENFORCEMENT-AND-LENIENCY.md) · [`configs/stability.config.json`](../configs/stability.config.json) |
 | `spider.spec.json` | [Adopting in Existing Projects](../workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) · [`configs/spider.spec.json`](../configs/spider.spec.json) |
 | `.joyignore` | [CLI Reference (`--init`)](api/cli.md) |
@@ -100,7 +110,7 @@ flowchart TB
 
 ## Start here
 
-New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term? See the [Glossary](GLOSSARY.md). To wire this into pipelines, see [CI & Tooling Integration](CI_INTEGRATION.md); to ship a version, see [Releasing](RELEASING.md). Spreading it to a team or agents? See [Propagation](PROPAGATION.md). Running it in production pipelines? Use the [Operations Runbook](OPERATIONS.md).
+New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term? See the [Glossary](GLOSSARY.md). To wire this into pipelines, see [CI & Tooling Integration](CI_INTEGRATION.md); to ship a version, see [Releasing](RELEASING.md). Spreading it to a team or agents? See [Propagation](PROPAGATION.md). Embedding the zero-dependency BroccoliQueue, BufferedDb, and AgentSwarm? See [Portable Broccoli Trinity](PORTABLE_TRINITY.md). Running it in production pipelines? Use the [Operations Runbook](OPERATIONS.md).
 
 | Doc | Description |
 |-----|-------------|
@@ -131,11 +141,11 @@ New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term?
 
 | Change | Update in `docs/` | Update in `spec/` or `workflows/` |
 |--------|-------------------|-----------------------------------|
-| New exported function/class in `src/index.mjs` | `api/public-api.md`, `CODE_TO_DOC_MAP.md`, `papers/companion-brief.md` | — |
-| New CLI flag or output format in `bin/joy-check.mjs` | `api/cli.md`, `README.md`, `papers/companion-brief.md` | — |
+| New exported function/class in `src/index.mjs` or `src/portable.mjs` | `api/public-api.md`, `PORTABLE_TRINITY.md`, `CODE_TO_DOC_MAP.md`, `papers/companion-brief.md` | — |
+| New CLI command/flag or MCP tool in `bin/joy*.mjs` or `McpServer.mjs` | `api/cli.md`, `README.md`, `papers/companion-brief.md` | — |
 | New `SPI-xxx` or `RTG-xxx` diagnostic code | `api/errors.md` | `spec/03-METRICS-AND-FORENSICS.md` or `spec/05-PORTABLE-SUBSTRATE-TRINITY.md` |
 | New refactoring SOP or agent playbook | `CODE_TO_DOC_MAP.md` | `workflows/02-TACTICAL-REFACTORING-SOPS.md` or `workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md` |
-| New module added under `src/` | `PROJECT_MAP.md`, `CODE_TO_DOC_MAP.md`, `architecture/current.md` | — |
+| New module added under `src/`, `bin/`, or `plugin/` | `PROJECT_MAP.md`, `CODE_TO_DOC_MAP.md`, `architecture/current.md` | — |
 
 ---
 
@@ -197,9 +207,10 @@ New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term?
 | Doc | Topic |
 |-----|-------|
 | [api/README.md](api/README.md) | API & CLI documentation index |
-| [api/public-api.md](api/public-api.md) | Frozen 84-symbol programmatic export surface (`src/index.mjs`) |
-| [api/cli.md](api/cli.md) | `bin/joy-check.mjs` & `bin/docs-check.mjs` CLI reference |
+| [api/public-api.md](api/public-api.md) | Frozen 84-symbol programmatic export surface (`src/index.mjs`) + `heav3ns-joy/portable` |
+| [api/cli.md](api/cli.md) | `bin/joy.mjs`, `bin/joy-check.mjs`, `bin/joy-trinity.mjs`, `bin/docs-check.mjs`, & MCP server reference |
 | [api/errors.md](api/errors.md) | Typed `GuidedError` catalog + `SPI-*` and `RTG-*` diagnostics |
+| [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) | Zero-dependency `BroccoliQueue`, `BufferedDb`, and `AgentSwarm` shell & Node API guide |
 
 ---
 
@@ -208,9 +219,12 @@ New? Follow the [Getting Started tutorial](GETTING_STARTED.md); unfamiliar term?
 **Run full verification & documentation guardrails (repository root):**
 
 ```bash
-npm test                            # Run all 22 test suites + CLI smoke tests (node:test)
+npm run verify                      # Run tests + joy-check + docs:check + plugin:check
+npm test                            # Run all 22 test files (36 logical suites, 196 tests)
 npm run joy-check                   # Strict self-hosting Joyzoning & Spider audit
 npm run docs:check                  # Verify required docs, relative links, sections, and live metrics
+npm run plugin:check                # Verify generated plugin/ bundle is in sync with templates
+node ./bin/joy.mjs doctor .         # Verify Node, Trinity selftest, agent installation, & live MCP handshake
 node ./bin/joy-check.mjs . --doctor # Run StabilityDoctor architectural health checkup
 node ./bin/joy-check.mjs . --stats  # Run V215 multivariate workspace statistics & Z-score outliers
 ```

@@ -1,0 +1,19 @@
+{
+  "name": "heav3ns-joy",
+  "owner": {
+    "name": "CardSorting"
+  },
+  "metadata": {
+    "description": "HEAV3NS-JOY agent tooling",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "joy",
+      "source": "./plugin",
+      "description": "Joyzoning audits, MCP tools, skills, and swarm commands",
+      "version": "1.0.0",
+      "category": "development"
+    }
+  ]
+}

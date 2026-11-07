@@ -8,3 +8,7 @@ joyzoning.sarif
 coverage/
 .idea/
 .vscode/
+
+# joy-trinity default state directory
+.joy-state/
+.broccolidb/

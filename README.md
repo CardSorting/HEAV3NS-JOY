@@ -22,6 +22,8 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 - [Why this exists](#why-this-exists)
 - [Philosophy](#philosophy)
 - [For AI Agents](#for-ai-agents)
+- [Set Up Your Agents (`joy init`)](#set-up-your-agents-joy-init)
+- [Operate the Portable Trinity](#operate-the-portable-trinity-any-harness)
 - [Quick Start](#quick-start-under-2-minutes)
 - [Find Your Path](#find-your-path)
 - [Zones at a Glance](#zones-at-a-glance)
@@ -135,8 +137,81 @@ npm run verify                                # this repo only: tests + audit + 
 | Missing/misaligned headers | `--heal --dry-run`, review, then `--heal` |
 | Rule seems wrong | Do not weaken config to pass; report the finding and the file |
 | Core needs infrastructure | Add `I<Name>` in `src/domain/interfaces/`, implement in infrastructure, depend on the interface |
+| Need durable jobs, buffered tables, or swarm planning | Use `node bin/joy-trinity.mjs` (see [Operate the Portable Trinity](#operate-the-portable-trinity-any-harness)); start with `selftest` |
+| `joy-trinity` exits `2` / `1` | `2`: fix the command, never treat as success. `1`: read `error.message`, fix the cause, retry once; if it persists, report it |
 
 Machine-readable outputs: `--format json|sarif|ndjson|lsp|compact`. Full agent stack: [docs/AGENT_STACK.md](docs/AGENT_STACK.md).
+
+## Set Up Your Agents (`joy init`)
+
+While Joyzoning requires zero installation to adopt, **`joy`** (`bin/joy.mjs` / `npx heav3ns-joy`) gives you a `create-next-app`-style experience that detects your coding agents and installs native instructions, skills, slash commands, subagents, MCP servers, and optional post-edit hooks in one command:
+
+```bash
+npx heav3ns-joy init                              # interactive when a TTY, or auto-detects in CI
+npx heav3ns-joy init --yes --agents all --hooks   # install for all 8 agents + post-edit hook
+npx heav3ns-joy add cursor antigravity            # add agents later (non-destructive)
+npx heav3ns-joy status                            # inspect managed files and drift
+npx heav3ns-joy doctor                            # check Node, Trinity, manifest, and live MCP handshake
+npx heav3ns-joy update                            # refresh managed sections after upgrading
+npx heav3ns-joy remove                            # cleanly remove managed sections/keys and owned files
+```
+
+**What `joy init` installs (non-destructively):**
+- **Universal**: [`AGENTS.md`](AGENTS.md) (`<!-- joy:agents:start/end -->` protocol block) and [`SOUL.md`](SOUL.md) (`<!-- joy:soul:start/end -->` operating principles). Existing prose outside the markers is preserved verbatim.
+- **Claude Code (`claude`)**: `CLAUDE.md`, `.claude/skills/{joyzoning,joy-trinity,joy-swarm}/SKILL.md`, `.claude/commands/{joy-check,joy-swarm}.md`, `.claude/agents/joy-auditor.md`, `.mcp.json` (`mcpServers.joy`), and (with `--hooks`) a `PostToolUse` hook in `.claude/settings.json`. Also available as a checked-in marketplace plugin under [`plugin/`](plugin/README.md) (`.claude-plugin/marketplace.json`).
+- **Gemini CLI (`gemini`)**: `GEMINI.md` and `.gemini/settings.json` (`mcpServers.joy`).
+- **Antigravity (`antigravity`)**: `.agents/skills/{joyzoning,joy-trinity,joy-swarm}/SKILL.md` and `.agents/plugins/joy/{plugin.json,mcp_config.json}`.
+- **Cursor (`cursor`)**: `.cursor/rules/joyzoning.mdc` and `.cursor/mcp.json`.
+- **GitHub Copilot / VS Code (`copilot`)**: `.github/copilot-instructions.md` and `.vscode/mcp.json`.
+- **Windsurf (`windsurf`)**: `.windsurf/rules/joyzoning.md`.
+- **OpenAI Codex CLI (`codex`)**: `AGENTS.md` (plus `joy mcp --print-config` snippet).
+- **Cline (`cline`)**: `.clinerules/joyzoning.md`.
+
+**Built-in MCP server (`joy mcp`)**: speaks both newline-delimited JSON-RPC 2.0 (MCP `2024-11-05`+) and `Content-Length`-framed stdio, exposing **23 `joy_*` tools** (`joy_audit`, `joy_check`, `joy_skeleton`, `joy_explain`, `joy_heal`, `joy_doctor`, `joy_trinity_*`, `joy_queue_*`, `joy_db_*`, `joy_swarm_*`), **5 `joy://` resources**, and **3 workflow prompts**—with zero external dependencies and no arbitrary code-execution surface. See [docs/api/cli.md](docs/api/cli.md#joy-binjoymjs).
+
+## Operate the Portable Trinity (any harness)
+
+Besides auditing, the repo embeds three zero-dependency building blocks: **BroccoliQueue** (durable job queue), **BufferedDb** (write-behind tables), and **AgentSwarm** (specialist planning and dispatch), all on an embedded **BroccoliDB** kernel. You operate them with the same contract as `joy-check`: a shell command in, one JSON document out.
+
+**Minimum capabilities your harness needs:** run a shell command, read/write files, Node.js 18+. Nothing else: no network, MCP server, plugin, `npm install`, or in-process imports.
+
+```bash
+node bin/joy-trinity.mjs selftest                                  # prove queue + db + swarm work here (exit 0)
+node bin/joy-trinity.mjs queue add email --data '{"to":"ada"}' --key welcome:ada
+node bin/joy-trinity.mjs queue drain email --handler ./handler.mjs # handler.mjs: export default async (job) => result
+node bin/joy-trinity.mjs queue list --state failed                 # then: queue retry <id> | cancel <id> | prune
+node bin/joy-trinity.mjs db push docs --data '{"id":"1","title":"hi"}'
+node bin/joy-trinity.mjs db select docs --where id=1 --limit 10
+node bin/joy-trinity.mjs swarm classify --task "fix the flaky test in src/a.ts" --max 4
+node bin/joy-trinity.mjs --help                                    # full command list
+```
+
+**Run a specialist swarm without touching your harness.** You cannot edit your harness, and you do not need to. The framework plans, orders, and tracks the work; you (or any subagents you already have) do it:
+
+```bash
+node bin/joy-trinity.mjs swarm plan --task "<goal>" --cwd . --id f1     # roster + dependency order, persisted
+node bin/joy-trinity.mjs swarm next f1                                  # claims ready specialists; each has a complete `prompt`
+node bin/joy-trinity.mjs swarm report f1 --assignment <id> --status completed --summary "<findings + evidence>"
+node bin/joy-trinity.mjs swarm next f1                                  # repeat until "done": true; dependents get prior reports
+node bin/joy-trinity.mjs swarm finish f1                                # escaped handoff + all reports
+```
+
+Have a CLI agent or script to do the work instead? `swarm run --task "<goal>" --exec '["cmd","arg"]'` spawns one process per specialist (prompt on stdin, stdout is the report; no shell involved). Details and rules: [docs/PORTABLE_TRINITY.md](docs/PORTABLE_TRINITY.md#three-ways-to-run-a-swarm-none-require-touching-your-harness).
+
+**Contract (identical in every harness):**
+
+| Rule | Detail |
+| :--- | :--- |
+| Output | `--format json` (default): exactly one JSON document on stdout, `{"ok":true,"command","result"}` or `{"ok":false,"error":{"code","message","hint"?}}`. Also `--format ndjson` (one document per line) and `--format text` (human tables; errors on stderr) |
+| Exit codes | `0` success, `1` runtime failure (read `error.message`, fix, retry), `2` usage error (fix the command; never treat as success) |
+| State | Durable under `--root` (default `./.joy-state/.broccolidb`); every call is a separate process and sees prior calls' writes |
+| Input | `--data '<json>'`, `--data-file <path>`, or `--data -` for stdin |
+| Delivery | Queue jobs are at-least-once; make handlers idempotent and pass `--key` to dedupe producers |
+| Concurrency | Safe by construction: every state command takes an exclusive lock on `--root` (`.joy-lock`), so parallel invocations queue up; a lock left by a crashed process is reclaimed automatically; after `--lock-timeout-ms` (default 10 s) you get `ROOT_LOCKED` naming the holder |
+| Discoverability | `--help` at any depth, `help <command>`, "did you mean" suggestions for typos in commands, options, and values, `doctor` to diagnose, `completion bash\|zsh` for tab completion |
+| Configuration | `$JOY_STATE_ROOT` (state directory), `$JOY_FORMAT` (output format) |
+
+Embedding in your own Node program instead? `import { createPortableBroccoli, createAgentSwarm } from "heav3ns-joy/portable"`. Only if you own a Node host, you may instead plug your own agent loop into `AgentSwarmDispatcher` via the small [`ISwarmAgentEngine`](src/domain/interfaces/ISwarmAgentEngine.mjs) shape. Full guide: [docs/PORTABLE_TRINITY.md](docs/PORTABLE_TRINITY.md).
 
 ## Quick Start (under 2 minutes)
 
@@ -167,6 +242,7 @@ The command exits non-zero only on **blocking** violations, so it is safe to use
 | **Advocate / team lead** | [Spreading Joyzoning](docs/PROPAGATION.md) | [Adopter AGENTS.md template](templates/AGENTS.adopter.md) |
 | **Security reviewer** | [SECURITY.md](SECURITY.md) | [Security best practices](docs/SECURITY_BEST_PRACTICES.md) |
 | **Integrating programmatically** | [Public API](docs/api/public-api.md) | [`src/index.mjs`](src/index.mjs) |
+| **Operating queue / db / swarm from any harness** | [Portable Trinity](docs/PORTABLE_TRINITY.md) | [`bin/joy-trinity.mjs`](bin/joy-trinity.mjs), [`src/portable.mjs`](src/portable.mjs) |
 
 ## Zones at a Glance
 
@@ -201,6 +277,10 @@ flowchart LR
 | Gate commits | Install [`configs/pre-commit-hook.sh`](configs/pre-commit-hook.sh) as `.git/hooks/pre-commit` |
 | Validate the docs | `npm run docs:check` |
 | Run everything CI runs | `npm run verify` |
+| Check the portable queue / db / swarm work in this environment | `node bin/joy-trinity.mjs selftest` |
+| Enqueue or inspect a durable job | `node bin/joy-trinity.mjs queue add <name> --data '<json>'` / `queue list` |
+| Plan a specialist formation for a task | `node bin/joy-trinity.mjs swarm classify --task "<text>"` |
+| Run a multi-specialist swarm from a plain shell | `swarm plan` → `swarm next` / `swarm report` → `swarm finish` (or `swarm run --exec`) |
 | See machine-readable output | `--format sarif\|github\|junit\|tap\|ndjson\|lsp\|compact\|markdown` or `--json` |
 
 ## For Maintainers & Operators
@@ -228,6 +308,11 @@ The tool is read-only unless you pass `--init`, `--heal`, or `--heal-stateless` 
 | `SyntaxError` on startup | Node older than 18 | Upgrade Node (`.nvmrc` pins 18) |
 | Exit code `2` | Bad flag, bad `--format`/`--theme`, or missing directory | Read the stderr message; see [Operations](docs/OPERATIONS.md#failure-modes) |
 | Green but `Files Scanned : 0` | Everything excluded | Review `exclude` / `.joyignore` |
+| `joy-trinity` fails with `ROOT_LOCKED` | Another process is using the same `--root` | Wait, or pick another `--root`; `joy-trinity doctor` shows the holder. Locks from crashed processes clear themselves |
+| `joy-trinity` exits `2` with a `hint` | Typo or missing argument | Follow the hint (`did you mean …`), or run `joy-trinity <command> --help` |
+| `swarm next` lists a `stale` specialist | A claimed specialist never reported (its worker died) | `swarm retry <formation> --assignment <id>` |
+| `BUFFER_FULL` from `db push` | The store has stopped draining writes | Run `joy-trinity doctor`; fix the storage error, then retry |
+| Anything odd with queue/db/swarm | Unknown | `joy-trinity doctor`, then `joy-trinity selftest` |
 
 ## FAQ
 

@@ -46,8 +46,39 @@ export function scanCodeTokens(source, { preserveImportStrings = false } = {}) {
   const len = source.length;
   let out = "";
   let i = 0;
+  let inTemplateText = false;
+  const templateBraceStack = [];
 
   while (i < len) {
+    if (inTemplateText) {
+      while (i < len) {
+        if (source[i] === "\\") {
+          if (source[i + 1] === "\n") out += "\n";
+          i += 2;
+          continue;
+        }
+        if (source[i] === "\n") {
+          out += "\n";
+          i += 1;
+          continue;
+        }
+        if (source[i] === "`") {
+          inTemplateText = false;
+          i += 1;
+          break;
+        }
+        if (source[i] === "$" && source[i + 1] === "{") {
+          templateBraceStack.push(1);
+          out += " + (";
+          inTemplateText = false;
+          i += 2;
+          break;
+        }
+        i += 1;
+      }
+      continue;
+    }
+
     const ch = source[i];
     const next = source[i + 1];
 
@@ -96,38 +127,27 @@ export function scanCodeTokens(source, { preserveImportStrings = false } = {}) {
       continue;
     }
 
-    // 4. Template literal `...` (with support for nested `${...}` expressions)
+    // 4. Template literal `...` (preserving nested `${...}` code expressions)
     if (ch === "`") {
-      let newlines = "";
+      out += '""';
+      inTemplateText = true;
       i += 1;
-      let exprDepth = 0;
-      while (i < len) {
-        if (source[i] === "\\") {
-          if (source[i + 1] === "\n") newlines += "\n";
-          i += 2;
-          continue;
-        }
-        if (source[i] === "\n") {
-          newlines += "\n";
-        }
-        if (exprDepth === 0 && source[i] === "`") {
-          i += 1;
-          break;
-        }
-        if (source[i] === "$" && source[i + 1] === "{") {
-          exprDepth += 1;
-          i += 2;
-          continue;
-        }
-        if (exprDepth > 0 && source[i] === "{") {
-          exprDepth += 1;
-        } else if (exprDepth > 0 && source[i] === "}") {
-          exprDepth -= 1;
-        }
-        i += 1;
-      }
-      out += `""${newlines}`;
       continue;
+    }
+
+    if (templateBraceStack.length > 0) {
+      if (ch === "{") {
+        templateBraceStack[templateBraceStack.length - 1] += 1;
+      } else if (ch === "}") {
+        templateBraceStack[templateBraceStack.length - 1] -= 1;
+        if (templateBraceStack[templateBraceStack.length - 1] === 0) {
+          templateBraceStack.pop();
+          out += ') + ""';
+          inTemplateText = true;
+          i += 1;
+          continue;
+        }
+      }
     }
 
     // 5. Regex literal `/.../[gimsuy]*`

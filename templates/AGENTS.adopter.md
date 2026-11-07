@@ -25,11 +25,13 @@ Header syntax: `/** [LAYER: DOMAIN] */` (JS/TS/Java), `# [LAYER: DOMAIN]` (Pytho
 4. When core needs infrastructure, define `I<Name>` in `src/domain/interfaces/` and depend on that.
 5. Keep modules under 800 lines.
 
-## Verify
+## Verify & Operate
 
 ```bash
 node <path-to>/HEAV3NS-JOY/bin/joy-check.mjs .                 # exit 0 pass, 1 violations, 2 usage error
 node <path-to>/HEAV3NS-JOY/bin/joy-check.mjs --explain SPI-206 # why and how to fix a code
+node <path-to>/HEAV3NS-JOY/bin/joy.mjs init . --yes --hooks    # install native agent skills, SOUL.md, hooks, & MCP
+node <path-to>/HEAV3NS-JOY/bin/joy-trinity.mjs selftest        # verify portable BroccoliQueue + BufferedDb + AgentSwarm
 ```
 
 Do not weaken configuration to make a check pass. Report suspected false positives instead.

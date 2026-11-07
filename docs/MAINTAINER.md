@@ -9,22 +9,25 @@ Use [CODE_TO_DOC_MAP.md](CODE_TO_DOC_MAP.md) to find the matching documentation 
 
 | Change | Update |
 |--------|--------|
-| New exported symbol in `src/index.mjs` | [api/public-api.md](api/public-api.md), [README.md](README.md), [papers/companion-brief.md](papers/companion-brief.md) |
-| New CLI option or `--format` in `bin/joy-check.mjs` | [api/cli.md](api/cli.md), [`../README.md`](../README.md), [papers/companion-brief.md](papers/companion-brief.md) |
+| New exported symbol in `src/index.mjs` or `src/portable.mjs` | [api/public-api.md](api/public-api.md), [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md), [README.md](README.md), [papers/companion-brief.md](papers/companion-brief.md) |
+| New CLI command/flag or MCP tool in `bin/joy*.mjs` or `McpServer.mjs` | [api/cli.md](api/cli.md), [`../README.md`](../README.md), [papers/companion-brief.md](papers/companion-brief.md) |
+| New agent target, skill, or template in `src/domain/*Templates.mjs` | Run `npm run plugin:build` (`npm run plugin:check` verifies sync in CI), update [api/cli.md](api/cli.md) |
 | New `SPI-xxx` or `RTG-xxx` diagnostic | [api/errors.md](api/errors.md), [`../spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md) |
-| New module under `src/` | [PROJECT_MAP.md](PROJECT_MAP.md), [CODE_TO_DOC_MAP.md](CODE_TO_DOC_MAP.md), [architecture/current.md](architecture/current.md) |
+| New module under `src/`, `bin/`, or `plugin/` | [PROJECT_MAP.md](PROJECT_MAP.md), [CODE_TO_DOC_MAP.md](CODE_TO_DOC_MAP.md), [architecture/current.md](architecture/current.md) |
 | Architectural or mathematical change | [papers/companion-brief.md](papers/companion-brief.md), [papers/philosophy.md](papers/philosophy.md), [papers/whitepaper.md](papers/whitepaper.md) |
 
 ---
 
 ## Automated CI & documentation guardrails
 
-Run the zero-dependency documentation guardrail verifier from the repository root:
+Run the zero-dependency verification suite from the repository root:
 
 ```bash
+npm run verify                      # Run npm test + joy-check + docs:check + plugin:check
 npm run docs:check                  # Verify required docs, relative links, sections, and live metrics
 npm run joy-check                   # Verify 100% Joyzoning & Spider self-conformance across all files
-npm test                            # Run all 22 verification suites + CLI smoke tests
+npm run plugin:check                # Verify plugin/ bundle matches templates (regenerate via npm run plugin:build)
+npm test                            # Run all 22 test files (36 logical suites, 196 tests)
 ```
 
 ### What `npm run docs:check` (`bin/docs-check.mjs`) enforces

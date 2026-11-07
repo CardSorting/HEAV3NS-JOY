@@ -1,9 +1,10 @@
 # HEAV3NS-JOY
 
-> Agnostic, agent-native framework (Joyzoning) that binds every source file to one of five architectural zones, verified by a zero-dependency Node.js CLI. Not a harness, runtime, or MCP server.
+> Agnostic, agent-native framework (Joyzoning) that binds every source file to one of five architectural zones, verified by a zero-dependency Node.js CLI, plus a portable queue/db/swarm toolkit driven by the same shell-in/JSON-out contract. Not a harness, runtime, or MCP server.
 
 ## Start here
 - [AGENTS.md](AGENTS.md): 60-second operational protocol, the five coding rules, and the 8-point self-check
+- [SOUL.md](SOUL.md): seven operating principles for agents working in this repository
 - [README.md](README.md): overview, philosophy, quick start, agent decision rules
 
 ## Core rules (summary)
@@ -13,11 +14,19 @@
 - Relative imports: at most 3 "../". No runtime import cycles. Core depends on I<Name> interfaces in src/domain/interfaces/
 
 ## Commands
+- Agent setup & MCP: `node bin/joy.mjs init` (`add`, `status`, `update`, `remove`, `doctor`, `agents`, `mcp`, `hook post-edit`, `check`, `trinity`)
 - Audit: `node bin/joy-check.mjs <dir>` (exit 0 pass, 1 blocking violations, 2 usage error)
 - Scoped, token-cheap: `node bin/joy-check.mjs . --phase pre-edit --scope <file> --neighborhood 1 --format compact`
 - Explain a code: `node bin/joy-check.mjs --explain SPI-206`
 - Fix headers: `node bin/joy-check.mjs <dir> --heal --dry-run`
+- Portable queue/db/swarm: `node bin/joy-trinity.mjs selftest`
 - This repo: `npm run verify`
+
+## Portable Trinity (zero-dependency; operate from any shell)
+- `node bin/joy-trinity.mjs selftest`, `doctor`, then `--help` (works at any depth; typos get "did you mean" hints; `--format json|ndjson|text`); output is one JSON document, exit 0 ok / 1 failure / 2 usage error
+- Swarm without integration: `swarm plan` → `swarm next` / `swarm report` → `swarm finish` (you do the specialist work), or `swarm run --exec '["cmd"]'` to spawn CLI agents
+- Durable queue: `queue add|list|get|retry|cancel|drain`; tables: `db push|select`; planning: `swarm classify|config|knowledge`
+- [docs/PORTABLE_TRINITY.md](docs/PORTABLE_TRINITY.md): architecture, zone map, embedding via `heav3ns-joy/portable`
 
 ## Specification
 - [spec/00-CANONICAL-MODEL.md](spec/00-CANONICAL-MODEL.md)

@@ -12,6 +12,9 @@ Use this lookup table whenever you modify code in `src/`, `bin/`, or `configs/` 
 | `src/domain/broccoliRules.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [api/errors.md](api/errors.md) |
 | `src/domain/interfaces/IWorkspaceScanner.mjs` | [`spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md`](../spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md) · [api/public-api.md](api/public-api.md) |
 | `src/domain/interfaces/ICasStorage.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [api/errors.md](api/errors.md) |
+| `src/domain/managedBlock.mjs`, `src/domain/agentTemplates.mjs`, `src/domain/agentTargets.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) · [`SOUL.md`](../SOUL.md) |
+| `src/domain/mcpProtocol.mjs`, `src/domain/jsonSchemaLite.mjs` | [api/cli.md](api/cli.md) · [`AGENTS.md`](../AGENTS.md) |
+| `src/domain/interfaces/IProjectFiles.mjs`, `src/domain/interfaces/IToolRunner.mjs`, `src/domain/interfaces/IPathGuard.mjs`, `src/domain/interfaces/IResourceReader.mjs` | [`spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md`](../spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md) · [api/cli.md](api/cli.md) |
 
 ## Core Orchestration Engines (`src/core/`)
 
@@ -24,6 +27,7 @@ Use this lookup table whenever you modify code in `src/`, `bin/`, or `configs/` 
 | `src/core/JoyRideCache.mjs` | [`workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md`](../workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md) · [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [api/public-api.md](api/public-api.md) |
 | `src/core/BroccoliRuntime.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [`workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`](../workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md) · [api/public-api.md](api/public-api.md) |
 | `src/core/RuntimeStateGraph.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [Whitepaper §6](papers/whitepaper.md) |
+| `src/core/AgentInstaller.mjs`, `src/core/McpServer.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) · [`AGENTS.md`](../AGENTS.md) |
 
 ## Infrastructure Adapters (`src/infrastructure/`)
 
@@ -31,6 +35,10 @@ Use this lookup table whenever you modify code in `src/`, `bin/`, or `configs/` 
 |--------|---------------|
 | `src/infrastructure/NodeWorkspaceScanner.mjs` | [Architecture (current)](architecture/current.md) · [`workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md`](../workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) |
 | `src/infrastructure/NodeCasStorage.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [Whitepaper §6](papers/whitepaper.md) · [api/public-api.md](api/public-api.md) |
+| `src/infrastructure/broccolidb/*` (`broccolidb.mjs`, `broccolidb-table.mjs`, `broccolidb-table-query.mjs`, `sqlite-driver.mjs`) | [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [api/public-api.md](api/public-api.md) |
+| `src/infrastructure/broccoliqueue/*` (`queue.mjs`, `queue-helpers.mjs`, `worker.mjs`, `dlq.mjs`) | [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [api/cli.md](api/cli.md) |
+| `src/infrastructure/BroccoliBufferedStore.mjs`, `MemoryBufferedStore.mjs`, `ProcessAgentEngine.mjs`, `FileSwarmConfigStore.mjs`, `MemorySwarmConfigStore.mjs`, `FileRootLock.mjs` | [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [SECURITY_BEST_PRACTICES.md](SECURITY_BEST_PRACTICES.md) |
+| `src/infrastructure/NodeProjectFiles.mjs`, `StdioMcpTransport.mjs` | [api/cli.md](api/cli.md) · [SECURITY_BEST_PRACTICES.md](SECURITY_BEST_PRACTICES.md) |
 
 ## Stateless Plumbing (`src/plumbing/`)
 
@@ -50,6 +58,9 @@ Use this lookup table whenever you modify code in `src/`, `bin/`, or `configs/` 
 | `src/ui/CliFormatter.mjs` | [api/cli.md](api/cli.md) · [api/public-api.md](api/public-api.md) |
 | `src/ui/AgentFormatters.mjs` | [api/cli.md](api/cli.md) · [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) |
 | `bin/joy-check.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) |
+| `bin/joy.mjs`, `src/ui/joyCommands.mjs`, `src/ui/joyRenderer.mjs`, `src/ui/prompts.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) · [`AGENTS.md`](../AGENTS.md) |
+| `bin/joy-trinity.mjs`, `src/ui/trinityCli.mjs`, `src/ui/trinityRenderer.mjs`, `src/ui/cliKit.mjs` | [api/cli.md](api/cli.md) · [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [`README.md`](../README.md) |
+| `scripts/build-plugin.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) |
 | `bin/docs-check.mjs` | [MAINTAINER.md](MAINTAINER.md) · [DOCS_GUIDE.md](DOCS_GUIDE.md) |
 
 ## Papers & Executive Narrative

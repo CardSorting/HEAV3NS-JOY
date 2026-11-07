@@ -26,6 +26,7 @@ import {
   normalizeSlashes,
   computeDirectoryDepth,
   countParentTraversals,
+  resolveRelativeSpecifier,
   resolveWorkspaceImportTarget,
   levenshteinDistance
 } from "../plumbing/pathUtils.mjs";
@@ -301,7 +302,13 @@ export class SpiderEngine {
           config.goModulePrefix
         );
         if (!resolvedTarget) {
-          if (imp.specifier.startsWith(".")) {
+          const isExistingJson =
+            imp.specifier.endsWith(".json") &&
+            typeof this.scanner.pathExists === "function" &&
+            this.scanner.pathExists(
+              `${normalizeSlashes(rootDir || ".").replace(/\/+$/, "")}/${resolveRelativeSpecifier(node.path, imp.specifier)}`
+            );
+          if (imp.specifier.startsWith(".") && !isExistingJson) {
             node.recordDiagnostic({
               code: "SPI-101",
               type: "GHOST_FILE",

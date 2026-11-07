@@ -45,15 +45,18 @@ Set `HEAV3NS_JOY_BIN` if `joy-check.mjs` lives outside the repository root. Team
 
 ## Editors and agents
 
-| Consumer | Format |
+| Consumer | Format / Integration |
 | :--- | :--- |
+| Native 8-agent setup (Claude, Gemini, Antigravity, Cursor, Copilot, Windsurf, Codex, Cline) | `node ./bin/joy.mjs init . --yes --hooks` |
+| Stdio MCP server (23 tools, 5 resources, 3 prompts) | `node ./bin/joy.mjs mcp` (`--print-config` for JSON snippet) |
+| Claude Code / Gemini PostToolUse edit hook | `node ./bin/joy.mjs hook post-edit` (configured automatically by `joy init --hooks`) |
 | LSP-style diagnostics | `--format lsp` |
 | Token-lean agent output | `--format compact`, or `--phase pre-edit --scope <file> --neighborhood 1` |
 | Test dashboards | `--format tap` or `--format junit` |
 | Log pipelines | `--format ndjson` |
 | Code scanning | `--sarif` |
 
-Full flag reference: [api/cli.md](api/cli.md).
+Full flag and MCP reference: [api/cli.md](api/cli.md).
 
 ## Adopting gradually
 

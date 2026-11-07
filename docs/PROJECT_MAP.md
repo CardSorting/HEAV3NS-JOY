@@ -7,15 +7,20 @@ This map reflects the **actual** layout of the **HEAV3NS-JOY** workspace. Paths 
 
 | Directory / File | Architectural Zone | Role |
 |------------------|--------------------|------|
-| **`src/domain/`** | `DOMAIN` | Pure Joyzoning rules (`joyRules.mjs`), BroccoliDB/Spider rules (`broccoliRules.mjs`), 5-factor entropy & Martin/Gini/Z-score formulas (`entropyFormulas.mjs`) |
-| **`src/domain/interfaces/`** | `DOMAIN` | Formal Dependency Inversion contracts (`IWorkspaceScanner.mjs`, `ICasStorage.mjs`, `GuidedError`) |
-| **`src/core/`** | `CORE` | Orchestration engines: `SpiderEngine.mjs`, `SpiderToolkit.mjs`, `StabilityDoctor.mjs`, `RefactorHealer.mjs`, `JoyRideCache.mjs`, `BroccoliRuntime.mjs`, `RuntimeStateGraph.mjs` |
-| **`src/infrastructure/`** | `INFRASTRUCTURE` | Concrete Node.js adapters: `NodeWorkspaceScanner.mjs` (filesystem + atomic writes) and `NodeCasStorage.mjs` (sharded SHA-256 CAS + RFC 1952 GZIP Wire Engine) |
-| **`src/plumbing/`** | `PLUMBING` | Stateless leaf primitives: `canonicalHash.mjs` (FIPS 180-4 SHA-256, canonical JSON, AST skeletonizer), `codeTokenizer.mjs`, `sourceScanner.mjs`, `commentStyles.mjs`, `pathUtils.mjs` |
-| **`src/ui/`** | `UI` | Output formatters & presenters: `CliFormatter.mjs` (Terminal, Doctor, SARIF, GitHub, Markdown, Mermaid) and `AgentFormatters.mjs` (Compact, LSP, TAP, JUnit, NDJSON, Stats) |
+| **`src/domain/`** | `DOMAIN` | Pure Joyzoning rules (`joyRules.mjs`), BroccoliDB/Spider rules (`broccoliRules.mjs`), 5-factor entropy & Martin/Gini/Z-score formulas (`entropyFormulas.mjs`), BufferedDb/AgentSwarm domain logic (`bufferedDbOps.mjs`, `swarm*.mjs`), and agent installer targets/templates (`agentTargets.mjs`, `agentTemplates.mjs`, `skillTemplates.mjs`) |
+| **`src/domain/interfaces/`** | `DOMAIN` | Formal Dependency Inversion contracts (`IWorkspaceScanner.mjs`, `ICasStorage.mjs`, `IBufferedStore.mjs`, `ISwarmLeaseService.mjs`, `ISwarmAgentEngine.mjs`, `ISwarmConfigStore.mjs`, `IProjectFiles.mjs`, `GuidedError`) |
+| **`src/core/`** | `CORE` | Orchestration engines: `SpiderEngine.mjs`, `SpiderToolkit.mjs`, `StabilityDoctor.mjs`, `RefactorHealer.mjs`, `JoyRideCache.mjs`, `BroccoliRuntime.mjs`, `RuntimeStateGraph.mjs`, `BufferedDb.mjs`, `AgentSwarmDispatcher.mjs`, `SwarmFormationLedger.mjs`, `AgentInstaller.mjs`, `mcp/McpServer.mjs` |
+| **`src/infrastructure/`** | `INFRASTRUCTURE` | Concrete Node.js adapters: `NodeWorkspaceScanner.mjs`, `NodeCasStorage.mjs`, `broccolidb/` (`broccolidb.mjs`, `broccolidb-table.mjs`, `broccolidb-table-query.mjs`, `sqlite-driver.mjs`), `broccoliqueue/` (`queue.mjs`, `queue-helpers.mjs`, `worker.mjs`, `dlq.mjs`), `BroccoliBufferedStore.mjs`, `ProcessAgentEngine.mjs`, `FileRootLock.mjs`, `NodeProjectFiles.mjs`, `StdioMcpTransport.mjs` |
+| **`src/plumbing/`** | `PLUMBING` | Stateless leaf primitives: `canonicalHash.mjs`, `codeTokenizer.mjs`, `sourceScanner.mjs`, `commentStyles.mjs`, `pathUtils.mjs`, `ids.mjs`, `AsyncMutex.mjs`, `rowIds.mjs`, `cliArgs.mjs`, `managedBlocks.mjs` |
+| **`src/ui/`** | `UI` | Output formatters & presenters: `CliFormatter.mjs`, `AgentFormatters.mjs`, `JoyWizardPresenter.mjs`, and `joyCommands.mjs` |
 | **`src/index.mjs`** | `UI` | Public programmatic Composition Root exporting 84 frozen symbols |
+| **`src/portable.mjs`** | `UI` | Portable Trinity + AgentInstaller + McpServer Composition Root (`heav3ns-joy/portable`) |
+| **`bin/joy.mjs`** | `UI` | Unified `create-next-app`-style agent installer, MCP server (`joy mcp`), hook runner, and CLI |
 | **`bin/joy-check.mjs`** | `UI` | Zero-dependency CLI validator, self-healer, doctor, and Spider agent toolkit |
+| **`bin/joy-trinity.mjs`** | `UI` | Shell-in/JSON-out interface to the portable BroccoliQueue, BufferedDb, and AgentSwarm |
 | **`bin/docs-check.mjs`** | `UI` | Zero-dependency documentation guardrail verifier (`npm run docs:check`) |
+| **`scripts/build-plugin.mjs`** | `UI` | Generates `.claude-plugin/marketplace.json` and `plugin/` from `src/domain/agentTargets.mjs` |
+| **`plugin/`** | `UI` | Checked-in Claude Code marketplace plugin (skills, commands, subagent, MCP config) |
 | **`spec/`** | `DOMAIN` | Normative specifications (`00-CANONICAL-MODEL.md` through `05-PORTABLE-SUBSTRATE-TRINITY.md`) |
 | **`workflows/`** | `CORE` | Operational playbooks (`01-TRIAD-AUDIT-PLANNING.md` through `05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`) |
 | **`docs/`** | `UI` | Documentation hub, architecture maps, papers (`companion-brief`, `philosophy`, `whitepaper`), and `api/` reference |

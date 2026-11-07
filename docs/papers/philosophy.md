@@ -33,6 +33,8 @@ Every principle in HEAV3NS-JOY maps directly to zero-dependency code you can ope
 | Execution caches never serve stale or secret data | 11-point fingerprint validation & secret guard in [`src/core/JoyRideCache.mjs`](../../src/core/JoyRideCache.mjs) |
 | Mutations require causal proof & rollback safety | `BroccoliRuntime` & `RTG-001..008` in [`src/core/BroccoliRuntime.mjs`](../../src/core/BroccoliRuntime.mjs) |
 | Storage is content-addressed & self-quarantining | Sharded SHA-256 CAS & RFC 1952 GZIP Wire Engine in [`src/infrastructure/NodeCasStorage.mjs`](../../src/infrastructure/NodeCasStorage.mjs) |
+| Queues, buffered tables, & specialist swarms work outside any proprietary harness | `BroccoliQueue`, `BufferedDb`, `AgentSwarmDispatcher`, & `SwarmFormationLedger` in [`src/portable.mjs`](../../src/portable.mjs) & [`bin/joy-trinity.mjs`](../../bin/joy-trinity.mjs) |
+| Any coding agent can be onboarded non-destructively in one command | `AgentInstaller` (`joy init`), [`SOUL.md`](../../SOUL.md), & stdio `McpServer` (`joy mcp`) in [`bin/joy.mjs`](../../bin/joy.mjs) |
 
 ```
 Acquire    → AGENTS.md + spec/00..05

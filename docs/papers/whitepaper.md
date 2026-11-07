@@ -5,7 +5,7 @@
 
 *Do not build another place where agents run. Build something agents can learn from, carry away, and independently reproduce.*
 
-**Package:** `heav3ns-joy` · **Dependencies:** `0` · **Self-Conformance:** `99% SOVEREIGN (Grade A)`
+**Package:** `heav3ns-joy` · **Dependencies:** `0` · **Self-Conformance:** `100% SOVEREIGN (Grade A)`
 
 ---
 
@@ -13,12 +13,14 @@
 
 **HEAV3NS-JOY** is a zero-dependency, self-hosting software development framework and reference runtime translated from the LUMI architectural ecosystem. It addresses two coupled failure modes in autonomous software engineering: **spatial entropy** (erosion of module boundaries, circular dependencies, and I/O leakage) and **operational entropy** (context window exhaustion, stale execution caches, unverified file mutations, and non-reproducible agent sessions).
 
-The framework comprises four integrated subsystems implemented entirely in standard ECMAScript / Node.js built-ins:
+The framework comprises six integrated subsystems implemented entirely in standard ECMAScript / Node.js built-ins:
 
 1. **Joyzoning (`src/domain/joyRules.mjs`, `src/core/RefactorHealer.mjs`)** — A 5-zone spatial architecture model (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `PLUMBING`, `UI`) with automated header healing, statelessness healing, and relative import rewiring.
 2. **Spider Forensic Engine & Agent Toolkit (`src/core/SpiderEngine.mjs`, `src/core/SpiderToolkit.mjs`)** — A polyglot single-pass lexical dependency analyzer, 5-factor Structural Entropy engine, SHA-256 Merkle disk parity shield (`SPI-006`), semantic footprint tracker, $N$-hop neighborhood scoper, and structural AST skeletonizer.
 3. **JoyRide Bounded Execution Cache (`src/core/JoyRideCache.mjs`)** — A 5-tier execution cache with typed deterministic key builders, 11-point environmental fingerprint validation, single-flight request coalescing, a 4-tier memory pressure valve, and L1/L2 Content-Addressable Storage spillover.
 4. **BroccoliDB Operational Runtime (`src/core/BroccoliRuntime.mjs`, `src/core/RuntimeStateGraph.mjs`, `src/infrastructure/NodeCasStorage.mjs`)** — A governed session state machine enforcing Proof-Before-Mutation (`RTG-001..008`), sharded SHA-256 CAS with automatic corruption quarantine, and RFC 1952 multi-member GZIP stream synthesis (`BroccoliWireEngine`).
+5. **Portable Broccoli Trinity (`src/portable.mjs`, `bin/joy-trinity.mjs`)** — Zero-dependency durable priority job queues (`BroccoliQueue`), write-behind buffered tables with shadow transactions (`BufferedDb` over `IBufferedStore`), and multi-specialist task classification, DAG planning, convergence checking, and step-wise (`SwarmFormationLedger`) or external-process (`ProcessAgentEngine`) specialist dispatch (`AgentSwarm`).
+6. **Native Agent Tooling (`bin/joy.mjs`, `src/core/AgentInstaller.mjs`, `src/core/mcp/McpServer.mjs`, `plugin/`, `SOUL.md`)** — A `create-next-app`-style non-destructive installer for 8 coding agents (`claude`, `gemini`, `antigravity`, `cursor`, `copilot`, `windsurf`, `codex`, `cline`), a 23-tool / 5-resource / 3-prompt JSON-RPC 2.0 stdio MCP server (`joy mcp`), and a pre-built marketplace plugin.
 
 ---
 
@@ -29,9 +31,12 @@ The framework comprises four integrated subsystems implemented entirely in stand
 | Package version | **1.0.0** — [`package.json`](../../package.json) |
 | External npm dependencies | **0** — [`package.json`](../../package.json) |
 | Frozen programmatic exports | **84** — [`src/index.mjs`](../../src/index.mjs) |
+| Portable Trinity & Agent exports | **23** — [`src/portable.mjs`](../../src/portable.mjs) (`heav3ns-joy/portable`) |
+| Native agent installer targets | **8** — [`src/domain/agentTargets.mjs`](../../src/domain/agentTargets.mjs) |
+| Stdio MCP server surface | **23** tools, **5** resources, **3** prompts — [`src/core/mcp/McpServer.mjs`](../../src/core/mcp/McpServer.mjs) |
 | Self-explaining diagnostic codes & zones | **44** — [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) & [`src/domain/broccoliRules.mjs`](../../src/domain/broccoliRules.mjs) |
 | CLI output formats (`--format`) | **10** (`text`, `compact`, `json`, `sarif`, `github`, `markdown`, `lsp`, `tap`, `junit`, `ndjson`) |
-| Automated verification suites | **22** — [`tests/`](../../tests/joyzoning.test.mjs) |
+| Automated verification suites | **36** (`196` tests across `22` files) — [`tests/`](../../tests/joyzoning.test.mjs) |
 
 ---
 
@@ -120,3 +125,17 @@ Per RFC 1952 §2.2, concatenated GZIP members decompress as a single stream. `co
 
 ### 6.3 Governed `RuntimeStateGraph` (`RTG-001`..`RTG-008`)
 `BroccoliRuntime` ([`src/core/BroccoliRuntime.mjs`](../../src/core/BroccoliRuntime.mjs)) and `RuntimeStateGraph` ([`src/core/RuntimeStateGraph.mjs`](../../src/core/RuntimeStateGraph.mjs)) enforce 8 structural invariants on session state transitions (`RTG-001` Orphaned Node, `RTG-002` Dangling Edge, `RTG-003` Unproven Mutation Chain, `RTG-004` Replay Hash Divergence, `RTG-005` CAS Corruption, `RTG-006` Unlinked Rollback, `RTG-007` Unlinked Verification, `RTG-008` Premature Completion) and project read-only replays across 5 operator modes (`forensic`, `timeline`, `causal`, `verification`, `ci`).
+
+---
+
+## 7. Portable Broccoli Trinity & Native Agent Tooling
+
+### 7.1 `BroccoliQueue`, `BufferedDb`, & `AgentSwarm` (`src/portable.mjs`, `bin/joy-trinity.mjs`)
+To let any coding agent operate durable queues, write-behind tables, and multi-specialist swarms without modifying its own harness:
+- **`BroccoliQueue` (`src/infrastructure/broccoliqueue/`)**: Priority-ordered, deduplicating, retry/DLQ-capable durable job queue backed by the embedded SQLite-compatible BroccoliDB kernel (`src/infrastructure/broccolidb/`).
+- **`BufferedDb` (`src/core/BufferedDb.mjs`, `src/domain/bufferedDbOps.mjs`)**: Write-behind table buffer supporting atomic `increment(n)` deltas, layer-ordered batch flushes, and isolated per-agent shadow transactions (`beginWork` / `commitWork` / `rollbackWork`) over `IBufferedStore`.
+- **`AgentSwarm` (`src/core/AgentSwarmDispatcher.mjs`, `src/core/SwarmFormationLedger.mjs`, `src/domain/swarm*.mjs`)**: Classifies tasks, builds dependency-ordered specialist DAGs, validates convergence and handoff sanitization, and executes formations either in-process (`ISwarmAgentEngine`), across external CLI subprocesses (`ProcessAgentEngine` with `shell: false`), or step-by-step from any shell via `SwarmFormationLedger` (`swarm plan` → `swarm next` → `swarm report` → `swarm finish`).
+
+### 7.2 `joy` CLI, 8-Agent Installer, & Stdio MCP Server (`bin/joy.mjs`, `src/core/AgentInstaller.mjs`, `src/core/mcp/McpServer.mjs`)
+- **Non-Destructive 8-Agent Installer (`joy init`)**: Installs `AGENTS.md`, `SOUL.md`, skills (`joyzoning`, `joy-trinity`, `joy-swarm`), PostToolUse hooks, and MCP configurations for Claude Code, Gemini CLI, Antigravity, Cursor, GitHub Copilot, Windsurf, OpenAI Codex, and Cline using idempotent `<!-- joy:begin:... -->` managed blocks and SHA-256 drift tracking in `.joy/install.json`.
+- **Zero-Dependency Stdio MCP Server (`joy mcp`)**: Exposes 23 tools (`joy_audit`, `joy_check_phase`, `joy_skeleton`, `joy_heal`, `joy_doctor`, `joy_explain`, `joy_plan_move`, `joy_queue_*`, `joy_db_*`, `joy_swarm_*`), 5 `joy://` resources, and 3 workflow prompts over newline-delimited or `Content-Length` JSON-RPC 2.0 stdio.

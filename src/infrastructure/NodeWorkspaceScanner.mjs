@@ -5,6 +5,7 @@
  * and bounded Tier-1 file caching (JoyRide).
  */
 
+import { AGENT_CONFIG_EXCLUDES } from "../plumbing/agentConfigPaths.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { IWorkspaceScanner } from "../domain/interfaces/IWorkspaceScanner.mjs";
@@ -149,6 +150,11 @@ export class NodeWorkspaceScanner extends IWorkspaceScanner {
       } catch {
         // Ignore unreadable .joyignore
       }
+    }
+
+    // Agent instruction/tool configuration is not architecture-bearing source: exempt it by default.
+    if (merged.scanAgentConfig !== true) {
+      merged.exclude = Array.from(new Set([...(merged.exclude || []), ...AGENT_CONFIG_EXCLUDES]));
     }
 
     return merged;
@@ -428,6 +434,7 @@ export class NodeWorkspaceScanner extends IWorkspaceScanner {
   #mergeConfig(target, source) {
     if (!source || typeof source !== "object") return;
     if (source.theme) target.theme = source.theme;
+    if (typeof source.scanAgentConfig === "boolean") target.scanAgentConfig = source.scanAgentConfig;
     const rawExcludes = [
       ...(Array.isArray(source.exclude) ? source.exclude : []),
       ...(Array.isArray(source.excludePaths) ? source.excludePaths : [])

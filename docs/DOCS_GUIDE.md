@@ -20,17 +20,19 @@ Map of the **HEAV3NS-JOY** documentation system, modeled on LUMI's 1-to-1 verifi
 |-----|---------|
 | [README.md](README.md) | Central documentation hub, audience reading paths, and Mermaid map |
 | [DOCS_GUIDE.md](DOCS_GUIDE.md) | Documentation principles and directory index |
-| [AGENT_STACK.md](AGENT_STACK.md) | Two-layer map: Joyzoning spatial rules + Portable Substrate Trinity |
+| [AGENT_STACK.md](AGENT_STACK.md) | Three-surface map: Joyzoning spatial rules + Operational Substrate + Native Agent Tooling |
+| [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) | Zero-dependency `BroccoliQueue`, `BufferedDb`, and `AgentSwarm` shell & Node API guide |
 | [PROJECT_MAP.md](PROJECT_MAP.md) | 1-to-1 directory and module map of the repository |
 | [CODE_TO_DOC_MAP.md](CODE_TO_DOC_MAP.md) | Source file → documentation page lookup table |
 | [CONSTITUTION.md](CONSTITUTION.md) | The 5 immutable laws of the HEAV3NS-JOY substrate |
 | [CODEBASE_STANDARDS.md](CODEBASE_STANDARDS.md) | Repository layout, zone discipline, and AI-friendly coding rules |
 | [MAINTAINER.md](MAINTAINER.md) | Update checklist and `npm run docs:check` CI guardrails |
-| [GETTING_STARTED.md](GETTING_STARTED.md) | 10-minute tutorial: audit, fix, enforce |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | 10-minute tutorial: audit, `joy init`, fix, enforce |
 | [GLOSSARY.md](GLOSSARY.md) | Definitions of every framework term and code prefix |
 | [CI_INTEGRATION.md](CI_INTEGRATION.md) | GitHub Actions, GitLab, hooks, editors, branch protection |
 | [PROPAGATION.md](PROPAGATION.md) | Adoption script, agent prompts, pitches, cheat sheet, badge |
 | [OPERATIONS.md](OPERATIONS.md) | Operator runbook: exit codes, config, rollout, failure modes, incidents |
+| [SECURITY_BEST_PRACTICES.md](SECURITY_BEST_PRACTICES.md) | Security model, CAS & `.joy-lock` guards, approval gates, and local-first guarantees |
 | [RELEASING.md](RELEASING.md) | Versioning rules and release procedure |
 
 ### Architecture (`docs/architecture/`)
@@ -53,8 +55,8 @@ Map of the **HEAV3NS-JOY** documentation system, modeled on LUMI's 1-to-1 verifi
 | Doc | Purpose |
 |-----|---------|
 | [api/README.md](api/README.md) | Programmatic API and CLI reference index |
-| [api/public-api.md](api/public-api.md) | Frozen 84-symbol export surface in `src/index.mjs` |
-| [api/cli.md](api/cli.md) | `bin/joy-check.mjs` and `bin/docs-check.mjs` CLI reference |
+| [api/public-api.md](api/public-api.md) | Frozen 84-symbol export surface in `src/index.mjs` + `heav3ns-joy/portable` |
+| [api/cli.md](api/cli.md) | `bin/joy.mjs`, `bin/joy-check.mjs`, `bin/joy-trinity.mjs`, `bin/docs-check.mjs`, & MCP server reference |
 | [api/errors.md](api/errors.md) | Typed `GuidedError` catalog and `SPI-*` / `RTG-*` diagnostic reference |
 
 ### Normative Specifications & Workflows (`../spec/` & `../workflows/`)

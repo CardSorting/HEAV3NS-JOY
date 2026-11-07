@@ -9,7 +9,7 @@ _Companion to the [Technical Whitepaper](whitepaper.md). All figures below are m
 
 ## One sentence
 
-**HEAV3NS-JOY** (`heav3ns-joy` v1.0.0) is an agnostic, zero-dependency, repository-distributed software development framework combining **Joyzoning** (5-zone spatial sovereignty & polyglot graph forensics) with the **Portable Substrate Trinity** (**JoyRide** bounded execution caching, **Spider** agent ergonomics, and **BroccoliDB** sharded CAS & governed `RuntimeStateGraph`).
+**HEAV3NS-JOY** (`heav3ns-joy` v1.0.0) is an agnostic, zero-dependency, repository-distributed software development framework combining **Joyzoning** (5-zone spatial sovereignty & polyglot graph forensics), the **Portable Operational Substrate** (**JoyRide** bounded execution caching, **Spider** agent ergonomics, **BroccoliDB** sharded CAS & governed `RuntimeStateGraph`, and the **Portable Broccoli Trinity** `BroccoliQueue`, `BufferedDb`, and `AgentSwarm`), and **Native Agent Tooling** (`joy init` 8-agent installer, `SOUL.md`, skills, plugin, and `joy mcp` server).
 
 ---
 
@@ -21,6 +21,9 @@ _Companion to the [Technical Whitepaper](whitepaper.md). All figures below are m
 | External npm dependencies | **0** | [`package.json`](../../package.json) |
 | Canonical architectural zones | **5** | `CANONICAL_ZONES` in [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) |
 | Frozen public API exports | **84** | [`src/index.mjs`](../../src/index.mjs) |
+| Portable Trinity & Agent exports | **23** | [`src/portable.mjs`](../../src/portable.mjs) (`heav3ns-joy/portable`) |
+| Native agent installer targets | **8** | `claude`, `gemini`, `antigravity`, `cursor`, `copilot`, `windsurf`, `codex`, `cline` in [`src/domain/agentTargets.mjs`](../../src/domain/agentTargets.mjs) |
+| Stdio MCP server surface | **23** tools · **5** resources · **3** prompts | [`src/core/mcp/McpServer.mjs`](../../src/core/mcp/McpServer.mjs) (`joy mcp`) |
 | Self-explaining catalog entries (`--explain`) | **44** | `EXPLAIN_CATALOG` + `RTG_DIAGNOSTICS` in [`src/domain/`](../../src/domain/joyRules.mjs) |
 | JoyRide bounded cache tiers | **5** | `JOYRIDE_KINDS` in [`src/core/JoyRideCache.mjs`](../../src/core/JoyRideCache.mjs) |
 | JoyRide fingerprint invariants | **11** | `validate()` in [`src/core/JoyRideCache.mjs`](../../src/core/JoyRideCache.mjs) |
@@ -30,7 +33,7 @@ _Companion to the [Technical Whitepaper](whitepaper.md). All figures below are m
 | CLI output formats (`--format`) | **10** | [`bin/joy-check.mjs`](../../bin/joy-check.mjs) |
 | Max relative import parent traversal | **3** (`../../..`) | `SPI-209` in [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) |
 | Tier 1 Optimal module size cap | **800** lines | `SPI-203` in [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) |
-| Automated test suites | **22** | [`tests/`](../../tests/joyzoning.test.mjs) |
+| Automated test suites | **36** (`196` tests across **22** test files) | [`tests/`](../../tests/joyzoning.test.mjs) |
 
 ---
 
@@ -47,31 +50,33 @@ Autonomous coding agents and engineering teams suffer from **structural drift** 
 | Block edits against externally drifted files | **Spider** SHA-256 Merkle root & `SPI-006` Disk Parity Reality Shield |
 | Prove mutations before touching disk | **BroccoliDB** `RTG-003` (`Audit` → `MutationPlan` → `Execution` → `Verification` / `Rollback`) |
 | Persist & stream context without corruption | Sharded SHA-256 CAS with quarantine + RFC 1952 multi-member GZIP `BroccoliWireEngine` |
+| Run durable jobs, buffered tables, & specialist swarms from any harness | **Portable Broccoli Trinity** (`BroccoliQueue`, `BufferedDb`, `AgentSwarm`) via `bin/joy-trinity.mjs` or `heav3ns-joy/portable` |
+| Onboard any AI coding agent in one command | `joy init` 8-agent installer + `SOUL.md` + `joy mcp` stdio server (23 tools) + marketplace `plugin/` |
 
 ---
 
 ## Architecture (10 seconds)
 
 ```
-Developer / Coding Agent
+Developer / Coding Agent (Claude, Gemini, Antigravity, Cursor, Copilot, Windsurf, Codex, Cline)
          ↕
-bin/joy-check.mjs (CLI)  ·  src/index.mjs (84 Programmatic Exports)
+bin/joy.mjs · bin/joy-check.mjs · bin/joy-trinity.mjs · joy mcp (23 Tools) · src/index.mjs (84 Exports) · src/portable.mjs (23 Exports)
          ↕
-CORE: SpiderEngine · SpiderToolkit · JoyRideCache · BroccoliRuntime · RefactorHealer
-         ↕ (via IWorkspaceScanner & ICasStorage contracts)
-DOMAIN: joyRules · broccoliRules · entropyFormulas (0% I/O)
+CORE: SpiderEngine · SpiderToolkit · JoyRideCache · BroccoliRuntime · BufferedDb · AgentSwarm · AgentInstaller · McpServer
+         ↕ (via IWorkspaceScanner, ICasStorage, IBufferedStore, ISwarm*, & IProjectFiles contracts)
+DOMAIN: joyRules · broccoliRules · entropyFormulas · bufferedDbOps · swarm* · agentTargets (0% I/O)
          ↕
-PLUMBING: canonicalHash (FIPS 180-4 SHA-256) · codeTokenizer · sourceScanner (0% I/O, 0% state)
+PLUMBING: canonicalHash (FIPS 180-4 SHA-256) · codeTokenizer · sourceScanner · AsyncMutex · managedBlocks (0% I/O, 0% state)
          ↕
-INFRASTRUCTURE: NodeWorkspaceScanner (Atomic FS) · NodeCasStorage (Sharded CAS + RFC 1952 GZIP)
+INFRASTRUCTURE: NodeWorkspaceScanner · NodeCasStorage · BroccoliDb · BroccoliQueue · ProcessAgentEngine · FileRootLock
 ```
 
 ---
 
 ## Integration checklist (adopting in a project)
 
-- [ ] Read [`AGENTS.md`](../../AGENTS.md) (60-second operational protocol)
-- [ ] Run `node /path/to/HEAV3NS-JOY/bin/joy-check.mjs <project> --init` to scaffold `stability.config.json` and `.joyignore`
+- [ ] Read [`AGENTS.md`](../../AGENTS.md) and [`SOUL.md`](../../SOUL.md) (60-second operational protocol)
+- [ ] Run `node /path/to/HEAV3NS-JOY/bin/joy.mjs init <project> --yes --hooks` (or `node /path/to/HEAV3NS-JOY/bin/joy-check.mjs <project> --init` for config only)
 - [ ] Map brownfield folders via `spider.spec.json` if needed (see [`workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md`](../../workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md))
 - [ ] Run `node /path/to/HEAV3NS-JOY/bin/joy-check.mjs <project> --heal --heal-stateless` to align `[LAYER]` tags and heal `PLUMBING` state
 - [ ] Add [`configs/pre-commit-hook.sh`](../../configs/pre-commit-hook.sh) or [`configs/github-action.yml`](../../configs/github-action.yml) to CI

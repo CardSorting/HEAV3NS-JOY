@@ -1,24 +1,24 @@
 <!-- [LAYER: UI] -->
 # Operations Runbook
 
-For people who **run** `joy-check` in CI, hooks, or agent pipelines. Contributors should read [MAINTAINER.md](MAINTAINER.md) instead.
+For people who **run** `joy`, `joy-check`, `joy-trinity`, or `joy mcp` in CI, hooks, or agent pipelines. Contributors should read [MAINTAINER.md](MAINTAINER.md) instead.
 
 ## At a glance
 
 | Item | Value |
 | :--- | :--- |
 | Runtime | Node.js 18+, no dependencies, no network access, no telemetry |
-| Install | None; run `node bin/joy-check.mjs` from a clone or vendored copy |
-| Reads | Source files, `stability.config.json`, `spider.spec.json`, `.joyignore` in the target root |
-| Writes | **Nothing**, unless you pass `--init`, `--heal`, or `--heal-stateless` (all support `--dry-run`) |
+| Install | None; run `node bin/joy.mjs`, `node bin/joy-check.mjs`, or `node bin/joy-trinity.mjs` from a clone or vendored copy |
+| Reads | Source files, `stability.config.json`, `spider.spec.json`, `.joyignore`, `.joy/install.json` in the target root |
+| Writes | **Nothing** during audits; `joy init/add/update/remove` manage agent files (with backups in `.joy/backup/`); `joy-check --init/--heal/--heal-stateless` support `--dry-run`; `joy-trinity` writes under `--root` (default `./.joy-state`, locked by `.joy-lock`) |
 | Typical cost | Seconds for projects of thousands of files; single-threaded |
 
 ## Exit codes
 
 | Code | Meaning | CI action |
 | :---: | :--- | :--- |
-| `0` | No blocking violations under the active theme | Pass |
-| `1` | One or more blocking violations | Fail the build; read the report |
+| `0` | No blocking violations (`joy-check`), or command succeeded (`joy`, `joy-trinity`, `docs-check`) | Pass |
+| `1` | One or more blocking violations (`joy-check`), runtime failure (`joy-trinity`), or drift/failure (`joy status/doctor`, `docs-check`) | Fail the build; read the report |
 | `2` | Usage or environment error (bad flag, invalid `--format`/`--theme`, missing target directory) | Fix the pipeline; this is never a pass |
 
 Advisories (`[INFO]`, `SPI-101..112`) never change the exit code. `--heal` and `--init` exit `0` after writing; run an audit afterward to gate.
@@ -66,6 +66,8 @@ Set with `--theme <mode>` or `"theme"` in config. Details: [`spec/04-ENFORCEMENT
 | Output unparseable by a tool | Wrong `--format` | See [api/cli.md](api/cli.md); use `--json`/`--sarif` for machines |
 | `SyntaxError` at startup | Node < 18 | Upgrade Node |
 | `docs:check` fails after a rename | Dangling link | Fix link; `npm run docs:check` names the file |
+| `ROOT_LOCKED` from `joy-trinity` | Another process holds `.joy-lock` on `--root` | Wait for concurrent command to finish, or run `node bin/joy-trinity.mjs doctor` (auto-reclaims dead PID locks) |
+| `joy status` reports `modified` drift | User edited a managed agent block/file | Run `node bin/joy.mjs update --force` (backs up prior file to `.joy/backup/`) |
 
 > [!TIP]
 > Before trusting a green run, confirm `Files Scanned` is non-zero and plausible for your repository.

@@ -510,15 +510,25 @@ export function scaffoldWorkspaceConfig(scanner, rootDir, options = {}) {
 const REQUIRED_WORKSPACE_DOCS = Object.freeze([
   "README.md",
   "AGENTS.md",
+  "SOUL.md",
   "VALIDATION_REPORT.md",
+  "templates/AGENTS.adopter.md",
   "docs/README.md",
   "docs/DOCS_GUIDE.md",
   "docs/AGENT_STACK.md",
+  "docs/PORTABLE_TRINITY.md",
   "docs/PROJECT_MAP.md",
   "docs/CODE_TO_DOC_MAP.md",
   "docs/CONSTITUTION.md",
   "docs/CODEBASE_STANDARDS.md",
   "docs/MAINTAINER.md",
+  "docs/GETTING_STARTED.md",
+  "docs/GLOSSARY.md",
+  "docs/CI_INTEGRATION.md",
+  "docs/PROPAGATION.md",
+  "docs/OPERATIONS.md",
+  "docs/RELEASING.md",
+  "docs/SECURITY_BEST_PRACTICES.md",
   "docs/architecture/current.md",
   "docs/papers/README.md",
   "docs/papers/companion-brief.md",
@@ -575,7 +585,7 @@ const REQUIRED_DOCS_README_SECTIONS = Object.freeze([
  * }}
  */
 export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
-  const config = scanner.loadConfig(rootDir, DEFAULT_STABILITY_CONFIG);
+  const config = scanner.loadConfig(rootDir, { ...DEFAULT_STABILITY_CONFIG, scanAgentConfig: true });
   const scannedFiles = scanner.scanFiles(rootDir, config);
   const fileMap = new Map();
   const dirSet = new Set(["", ".", "configs", "examples", "tests", "src", "bin", "docs", "spec", "workflows"]);
@@ -626,6 +636,9 @@ export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
     }
     for (const reqLink of [
       "AGENT_STACK.md",
+      "PORTABLE_TRINITY.md",
+      "GETTING_STARTED.md",
+      "OPERATIONS.md",
       "MAINTAINER.md",
       "PROJECT_MAP.md",
       "CODE_TO_DOC_MAP.md",

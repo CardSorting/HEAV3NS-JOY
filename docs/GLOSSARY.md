@@ -18,7 +18,13 @@
 | **Articulation bridge (SPI-207)** | A module whose removal disconnects the graph; informational. |
 | **JoyRide** | Bounded, fingerprint-validated cache of file reads and results. |
 | **Skeletonization** | Reducing a file to its structural signature to save agent tokens. |
-| **BroccoliDB** | Portable causal runtime: content-addressed storage, quarantine, and replay for governed agent sessions. |
+| **BroccoliDB** | Portable causal runtime: content-addressed storage, quarantine, and replay for governed agent sessions, plus an embedded SQLite-backed document/table kernel (`src/infrastructure/broccolidb/`). |
+| **BroccoliQueue** | Durable, priority-ordered, retry/DLQ-capable job queue backed by the embedded BroccoliDB kernel (`src/infrastructure/broccoliqueue/`). |
+| **BufferedDb** | Write-behind table buffer (`src/core/BufferedDb.mjs`) with layer-ordered batch flushes and per-agent shadow transactions over `IBufferedStore`. |
+| **AgentSwarm** | Multi-specialist task classifier, DAG planner, convergence checker, and dispatcher (`src/core/AgentSwarmDispatcher.mjs`) operable step-by-step via `SwarmFormationLedger` or across external CLI processes via `ProcessAgentEngine`. |
+| **Portable Broccoli Trinity** | The zero-dependency combination of `BroccoliQueue`, `BufferedDb`, and `AgentSwarm` exposed by `bin/joy-trinity.mjs` and `heav3ns-joy/portable` ([PORTABLE_TRINITY.md](PORTABLE_TRINITY.md)). |
+| **joy CLI (`bin/joy.mjs`)** | The unified CLI and `create-next-app`-style agent installer (`joy init/add/status/update/remove/doctor/mcp/hook/check/trinity`). |
+| **SOUL.md** | The repository-level agent operating constitution installed by `joy init` ([`SOUL.md`](../SOUL.md)). |
 | **CAS** | Content-addressed storage keyed by SHA-256. |
 | **Triad Audit** | Pre-implementation review from three perspectives: Architect, Critic, SRE ([workflow 01](../workflows/01-TRIAD-AUDIT-PLANNING.md)). |
 | **Producer-before-consumer** | Implement callees (plumbing, domain, infrastructure) before their callers (core, ui). |

@@ -110,3 +110,41 @@ import {
 | **Ports & Infrastructure** | `IWorkspaceScanner`, `ICasStorage`, `GuidedError`, `formatErrorGuidance`, `NodeWorkspaceScanner`, `NodeCasStorage` |
 | **Stateless Plumbing** | `sha256Hex`, `normalizeForHash`, `stableStringify`, `computeDeterministicFingerprint`, `utf8ByteLength`, `summarizeCommandOutput`, `normalizeAstTokens`, `extractSymbolFootprints`, `distillSourceSkeleton` |
 | **UI Formatters** | `formatTerminalReport`, `formatDoctorReport`, `formatSarifReport`, `formatGithubAnnotations`, `formatMarkdownReport`, `formatExplainOutput`, `renderMermaidGraph`, `formatCompactReport`, `formatLspDiagnostics`, `formatTapReport`, `formatJUnitReport`, `formatNdjsonReport`, `exportProblemMatcherConfig`, `formatStatsReport` |
+
+---
+
+## 5. Portable Broccoli Trinity & Native Agent Tooling (`heav3ns-joy/portable`)
+
+To preserve the frozen 84-symbol surface of `src/index.mjs`, the Portable Broccoli Trinity (`BroccoliQueue`, `BufferedDb`, `AgentSwarm`), the 8-agent installer, and the stdio MCP server are exported from the secondary subpath [`src/portable.mjs`](../../src/portable.mjs) (`heav3ns-joy/portable`):
+
+```js
+import {
+  createPortableBroccoli,
+  createAgentSwarm,
+  createAgentInstaller,
+  createMcpServer,
+  serveMcpOverStdio,
+  BroccoliDb,
+  BroccoliQueue,
+  BufferedDb,
+  BroccoliBufferedStore,
+  MemoryBufferedStore,
+  increment,
+  ShadowCommitError,
+  AgentSwarmDispatcher,
+  SwarmFormationLedger,
+  ProcessAgentEngine,
+  SwarmTaskCoordinator,
+  SwarmKnowledgeService,
+  SwarmConfigService,
+  InMemorySwarmLeaseService,
+  FileSwarmConfigStore,
+  MemorySwarmConfigStore,
+  AgentInstaller,
+  AGENT_TARGETS,
+  McpServer,
+  StdioMcpTransport
+} from "heav3ns-joy/portable";
+```
+
+See [PORTABLE_TRINITY.md](../PORTABLE_TRINITY.md) and [cli.md](cli.md) for usage examples.

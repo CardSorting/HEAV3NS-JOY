@@ -5,6 +5,18 @@ Ready-to-use material for getting Joyzoning into a team, a repository, or an age
 
 ## 1. Adopt in a repo (5 minutes)
 
+**Option A — One-command agent & workspace setup (`joy init`, recommended):**
+
+```bash
+git clone https://github.com/CardSorting/HEAV3NS-JOY.git ~/HEAV3NS-JOY
+cd /path/to/your/repo
+node ~/HEAV3NS-JOY/bin/joy.mjs init . --yes --hooks           # installs AGENTS.md, SOUL.md, skills, MCP, & hooks
+node ~/HEAV3NS-JOY/bin/joy-check.mjs . --heal --dry-run       # preview header fixes
+node ~/HEAV3NS-JOY/bin/joy-check.mjs . --theme relaxed        # first audit, gentle
+```
+
+**Option B — Manual zero-install setup (`joy-check` only):**
+
 ```bash
 git clone https://github.com/CardSorting/HEAV3NS-JOY.git ~/HEAV3NS-JOY
 cd /path/to/your/repo
