@@ -18,6 +18,7 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 
 ## Table of Contents
 
+- [The Idea in 60 Seconds](#the-idea-in-60-seconds)
 - [Why this exists](#why-this-exists)
 - [Philosophy](#philosophy)
 - [For AI Agents](#for-ai-agents)
@@ -28,10 +29,26 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 - [For Maintainers & Operators](#for-maintainers--operators)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
+- [Share & Adopt](#share--adopt)
 - [The Five Questions Every Agent Must Answer](#the-five-questions-every-agent-must-answer)
 - [60-Second Quick Reference Card](#60-second-quick-reference-card)
 - [Progressive Discovery Map](#progressive-discovery-map)
 - [Contributing, Security & License](#contributing-security--license)
+
+## The Idea in 60 Seconds
+
+| | |
+| :--- | :--- |
+| **What** | A convention plus a tiny checker. Every file declares one of five zones (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `PLUMBING`, `UI`) in a one-line header. |
+| **Why** | Architecture drifts silently, and AI agents accelerate the drift. Making structure machine-checkable stops it at the commit, not in a rewrite. |
+| **How** | Put each file in the folder for its zone, import only in allowed directions, run `node bin/joy-check.mjs .`. Exit `0` means sound. |
+| **Cost** | Zero dependencies, no accounts, no network, read-only by default. |
+
+Think of a restaurant: the kitchen (**domain**) never phones suppliers (**infrastructure**) mid-recipe, and the dining room (**ui**) never walks into the pantry. Joyzoning labels each file with its room and checks that nobody uses a forbidden door.
+
+**Try it now:** `git clone https://github.com/CardSorting/HEAV3NS-JOY.git && cd HEAV3NS-JOY && npm run joy-check`
+
+**Pick your depth:** 1 minute (this section) → 5 minutes ([Getting Started](docs/GETTING_STARTED.md)) → 30 minutes ([Canonical model](spec/00-CANONICAL-MODEL.md)) → deep dive ([Whitepaper](docs/papers/whitepaper.md)).
 
 ## Why this exists
 
@@ -147,6 +164,7 @@ The command exits non-zero only on **blocking** violations, so it is safe to use
 | **AI coding agent** | [AGENTS.md](AGENTS.md) (60-second protocol) | [Agent Stack](docs/AGENT_STACK.md), [Error codes](docs/api/errors.md) |
 | **Maintainer / contributor** | [CONTRIBUTING.md](CONTRIBUTING.md), [Maintainer guide](docs/MAINTAINER.md), [Releasing](docs/RELEASING.md) | [Codebase standards](docs/CODEBASE_STANDARDS.md), [Code-to-doc map](docs/CODE_TO_DOC_MAP.md) |
 | **Operator / CI owner** | [Operations Runbook](docs/OPERATIONS.md) | [CI integration](docs/CI_INTEGRATION.md), [CLI reference](docs/api/cli.md) |
+| **Advocate / team lead** | [Spreading Joyzoning](docs/PROPAGATION.md) | [Adopter AGENTS.md template](templates/AGENTS.adopter.md) |
 | **Security reviewer** | [SECURITY.md](SECURITY.md) | [Security best practices](docs/SECURITY_BEST_PRACTICES.md) |
 | **Integrating programmatically** | [Public API](docs/api/public-api.md) | [`src/index.mjs`](src/index.mjs) |
 
@@ -350,6 +368,16 @@ Do not read the entire repository unless needed. Follow the path that matches yo
   - [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md) — Results of self-conformance and clean-room acquisition experiments.
 
 ---
+
+## Share & Adopt
+
+Everything needed to spread Joyzoning to a repo, a team, or an agent is in [docs/PROPAGATION.md](docs/PROPAGATION.md): a 5-minute adoption script, copy-paste prompts for AI agents, one-breath pitches per audience, a one-page cheat sheet, and an adopter [`AGENTS.md` template](templates/AGENTS.adopter.md).
+
+Using Joyzoning? Add the badge (only when your CI exits `0`):
+
+```markdown
+[![Joyzoned](https://img.shields.io/badge/architecture-Joyzoned-blueviolet)](https://github.com/CardSorting/HEAV3NS-JOY)
+```
 
 ## Contributing, Security & License
 

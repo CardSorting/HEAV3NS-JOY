@@ -28,5 +28,9 @@
 ## Reference
 - [docs/api/cli.md](docs/api/cli.md), [docs/api/errors.md](docs/api/errors.md), [docs/GLOSSARY.md](docs/GLOSSARY.md)
 
+## Adopting in another repository
+- [templates/AGENTS.adopter.md](templates/AGENTS.adopter.md): drop-in AGENTS.md for adopters
+- [docs/PROPAGATION.md](docs/PROPAGATION.md): adoption script and agent prompts
+
 ## Optional
 - [docs/papers/whitepaper.md](docs/papers/whitepaper.md), [docs/OPERATIONS.md](docs/OPERATIONS.md), [docs/MAINTAINER.md](docs/MAINTAINER.md)

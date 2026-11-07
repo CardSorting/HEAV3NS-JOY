@@ -39,7 +39,7 @@
     "src",
     "spec",
     "workflows",
-    "configs",
+    "configs","templates",
     "docs",
     "examples",
     "AGENTS.md",

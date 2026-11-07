@@ -29,6 +29,7 @@ Map of the **HEAV3NS-JOY** documentation system, modeled on LUMI's 1-to-1 verifi
 | [GETTING_STARTED.md](GETTING_STARTED.md) | 10-minute tutorial: audit, fix, enforce |
 | [GLOSSARY.md](GLOSSARY.md) | Definitions of every framework term and code prefix |
 | [CI_INTEGRATION.md](CI_INTEGRATION.md) | GitHub Actions, GitLab, hooks, editors, branch protection |
+| [PROPAGATION.md](PROPAGATION.md) | Adoption script, agent prompts, pitches, cheat sheet, badge |
 | [OPERATIONS.md](OPERATIONS.md) | Operator runbook: exit codes, config, rollout, failure modes, incidents |
 | [RELEASING.md](RELEASING.md) | Versioning rules and release procedure |
 
