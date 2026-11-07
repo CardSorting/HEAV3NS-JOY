@@ -9,6 +9,111 @@ It is **not** an agent harness, model router, runtime, or MCP server. It require
 
 ---
 
+[![CI](https://github.com/CardSorting/HEAV3NS-JOY/actions/workflows/ci.yml/badge.svg)](https://github.com/CardSorting/HEAV3NS-JOY/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Node >=18](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![Dependencies: 0](https://img.shields.io/badge/dependencies-0-success)
+
+## Table of Contents
+
+- [Quick Start](#quick-start-under-2-minutes)
+- [Find Your Path](#find-your-path)
+- [Zones at a Glance](#zones-at-a-glance)
+- [Common Tasks](#common-tasks)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [The Five Questions Every Agent Must Answer](#the-five-questions-every-agent-must-answer)
+- [60-Second Quick Reference Card](#60-second-quick-reference-card)
+- [Progressive Discovery Map](#progressive-discovery-map)
+- [Contributing, Security & License](#contributing-security--license)
+
+## Quick Start (under 2 minutes)
+
+**Requirements:** Node.js 18+ and git. No `npm install` is needed: there are zero dependencies.
+
+```bash
+git clone https://github.com/CardSorting/HEAV3NS-JOY.git
+cd HEAV3NS-JOY
+
+npm test                              # run the test suite
+npm run joy-check                     # audit this repo against its own rules
+node bin/joy-check.mjs /path/to/your/project          # audit YOUR project
+node bin/joy-check.mjs /path/to/your/project --init   # scaffold config + .joyignore
+```
+
+A passing audit ends with `Blocking Violations (0): None. 100% Joyzoning Conformance.`
+The command exits non-zero only on **blocking** violations, so it is safe to use as a CI gate. Advisories (`[INFO]`) never fail a build.
+
+## Find Your Path
+
+| You are... | Start here | Then |
+| :--- | :--- | :--- |
+| **Evaluating / stakeholder** | [Whitepaper](docs/papers/whitepaper.md), [Companion Brief](docs/papers/companion-brief.md), [VALIDATION_REPORT.md](VALIDATION_REPORT.md) | [ROADMAP.md](ROADMAP.md), [CHANGELOG.md](CHANGELOG.md) |
+| **Developer adopting it** | [Adopting in existing projects](workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md) | [Examples](examples/typescript/violations-and-fixes.md), [CLI reference](docs/api/cli.md) |
+| **AI coding agent** | [AGENTS.md](AGENTS.md) (60-second protocol) | [Agent Stack](docs/AGENT_STACK.md), [Error codes](docs/api/errors.md) |
+| **Maintainer / contributor** | [CONTRIBUTING.md](CONTRIBUTING.md), [Maintainer guide](docs/MAINTAINER.md) | [Codebase standards](docs/CODEBASE_STANDARDS.md), [Code-to-doc map](docs/CODE_TO_DOC_MAP.md) |
+| **Security reviewer** | [SECURITY.md](SECURITY.md) | [Security best practices](docs/SECURITY_BEST_PRACTICES.md) |
+| **Integrating programmatically** | [Public API](docs/api/public-api.md) | [`src/index.mjs`](src/index.mjs) |
+
+## Zones at a Glance
+
+```mermaid
+flowchart LR
+  UI --> CORE
+  CORE --> DOMAIN
+  CORE -. "via I* interfaces" .-> INFRA[INFRASTRUCTURE]
+  INFRA -- implements --> DOMAIN
+  UI --> PLUMBING
+  CORE --> PLUMBING
+  INFRA --> PLUMBING
+  DOMAIN --> PLUMBING
+```
+
+| Zone | Directory | Owns | Must never |
+| :--- | :--- | :--- | :--- |
+| `DOMAIN` | `src/domain/` | Business rules, entities, `I*` contracts | Do I/O or import infrastructure/ui |
+| `CORE` | `src/core/` | Use-case orchestration, policies | Import `ui` |
+| `INFRASTRUCTURE` | `src/infrastructure/` | fs/http/db adapters | Import `ui`, hold business logic |
+| `PLUMBING` | `src/plumbing/`, `src/utils/` | Stateless helpers | Import any other zone, keep mutable state |
+| `UI` | `src/ui/` | Presenters, CLI, views | Import `infrastructure` directly |
+
+## Common Tasks
+
+| I want to... | Run |
+| :--- | :--- |
+| Audit a project | `node bin/joy-check.mjs <path>` |
+| Add missing `[LAYER]` headers (preview first) | `node bin/joy-check.mjs <path> --heal --dry-run` |
+| Understand a violation | `node bin/joy-check.mjs --explain SPI-206` |
+| Gate CI / PRs | Copy [`configs/github-action.yml`](configs/github-action.yml) to `.github/workflows/` |
+| Gate commits | Install [`configs/pre-commit-hook.sh`](configs/pre-commit-hook.sh) as `.git/hooks/pre-commit` |
+| Validate the docs | `npm run docs:check` |
+| See machine-readable output | `--format sarif\|github\|junit\|tap\|ndjson\|lsp\|compact\|markdown` or `--json` |
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+| :--- | :--- | :--- |
+| Every file reports a missing header | Headers absent in a fresh adoption | `--heal --dry-run`, review, then `--heal` |
+| Files are flagged in the wrong zone | Non-canonical directory names | Map them in `stability.config.json` / `spider.spec.json` (`--init` scaffolds this) |
+| Vendored/generated code is noisy | Not excluded | List paths in `.joyignore` |
+| `SPI-201` circular dependency | Two modules import each other | Extract a contract to `domain/interfaces/` or a helper to `plumbing/` (`--explain SPI-201`) |
+| `docs:check` reports a broken link | Moved or renamed file | Fix the link; run `npm run docs:check` again |
+| `SyntaxError` on startup | Node older than 18 | Upgrade Node (`.nvmrc` pins 18) |
+
+## FAQ
+
+**Is this a runtime, SDK, or MCP server?** No. It is a convention set plus a zero-dependency validator you can copy anywhere.
+
+**Does it only work with TypeScript?** No. JavaScript, Python, Go, Rust, Java, C/C++, SQL, and Markdown are supported; new languages need only a comment-syntax entry.
+
+**Will it block my team on stylistic issues?** No. Only hard architectural violations are blocking; everything else is an advisory.
+
+**Do I have to rename my folders?** No. Map existing layouts to zones in config.
+
+**Where do I report a security issue?** Privately, per [SECURITY.md](SECURITY.md).
+
+---
+
 ## The Five Questions Every Agent Must Answer
 
 When encountering HEAV3NS-JOY for the first time, use this direct operational index:
@@ -131,4 +236,10 @@ Do not read the entire repository unless needed. Follow the path that matches yo
   - [`docs/`](docs/README.md) — Complete documentation hub: [Agent Stack](docs/AGENT_STACK.md), [Project Map](docs/PROJECT_MAP.md), [Code-to-Doc Map](docs/CODE_TO_DOC_MAP.md), [Constitution](docs/CONSTITUTION.md), [Papers](docs/papers/README.md) ([Companion Brief](docs/papers/companion-brief.md), [Philosophy](docs/papers/philosophy.md), [Whitepaper](docs/papers/whitepaper.md)), and [Programmatic & CLI API](docs/api/README.md) ([Public API](docs/api/public-api.md), [CLI](docs/api/cli.md), [Errors](docs/api/errors.md)).
   - [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md) — Results of self-conformance and clean-room acquisition experiments.
 
+---
 
+## Contributing, Security & License
+
+- Contribute via [CONTRIBUTING.md](CONTRIBUTING.md) and follow the [Code of Conduct](CODE_OF_CONDUCT.md). PRs get a checklist from the [PR template](.github/PULL_REQUEST_TEMPLATE.md).
+- Report vulnerabilities privately per [SECURITY.md](SECURITY.md).
+- Released under the [MIT License](LICENSE). See the [CHANGELOG](CHANGELOG.md) and [ROADMAP](ROADMAP.md).

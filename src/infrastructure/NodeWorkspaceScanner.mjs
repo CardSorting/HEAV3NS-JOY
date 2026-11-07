@@ -248,6 +248,21 @@ export class NodeWorkspaceScanner extends IWorkspaceScanner {
   }
 
   /**
+   * Reports whether a path (file or directory) exists on disk. Lets doc link checks
+   * resolve extensionless/non-source files (e.g. `LICENSE`) that `scanFiles` skips.
+   * @param {string} absolutePath
+   * @returns {boolean}
+   */
+  pathExists(absolutePath) {
+    try {
+      fs.statSync(absolutePath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Atomically writes updated content to disk (preserving executable permissions if present)
    * and updates the Tier-1 JoyRide file cache.
    * @param {string} absolutePath

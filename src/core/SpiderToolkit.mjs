@@ -678,7 +678,10 @@ export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
         fileMap.has(resolved) ||
         fileMap.has(`${resolved}.md`) ||
         dirSet.has(resolved) ||
-        knownExemptFiles.has(resolved);
+        knownExemptFiles.has(resolved) ||
+        (typeof scanner.pathExists === "function" &&
+          !resolved.startsWith("..") &&
+          scanner.pathExists(`${rootDir.replace(/\/+$/, "")}/${resolved}`));
 
       if (!exists) {
         brokenLinks.push({ file: relPath, target: rawTarget, resolved });

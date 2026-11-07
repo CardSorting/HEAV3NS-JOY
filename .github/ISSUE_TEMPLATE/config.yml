@@ -1,0 +1,6 @@
+# [LAYER: INFRASTRUCTURE]
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/CardSorting/HEAV3NS-JOY/blob/main/SECURITY.md
+    about: Please follow the private disclosure process in SECURITY.md.

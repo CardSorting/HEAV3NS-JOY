@@ -18,6 +18,8 @@
  * - `loadConfig(rootDir): Object`
  * - `scanFiles(rootDir, config): WorkspaceFileRecord[]`
  * - `writeFile(absolutePath, content): void`
+ * Optional:
+ * - `pathExists(absolutePath): boolean` (used by documentation link verification)
  */
 export class IWorkspaceScanner {
   /**
@@ -43,6 +45,14 @@ export class IWorkspaceScanner {
    */
   writeFile(_absolutePath, _content) {
     throw new Error("IWorkspaceScanner.writeFile must be implemented by an Infrastructure adapter.");
+  }
+
+  /**
+   * @param {string} _absolutePath
+   * @returns {boolean}
+   */
+  pathExists(_absolutePath) {
+    return false;
   }
 }
 

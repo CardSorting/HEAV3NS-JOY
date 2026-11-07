@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [Unreleased]
+
+### Added
+- README onboarding: badges, table of contents, 2-minute quick start, audience routing table, zone diagram, common tasks, troubleshooting, and FAQ.
+- `.github/` CI workflow (Node 18/20/22: tests, self-audit, docs guardrails), PR template, issue templates, `CODEOWNERS`.
+- `.editorconfig`, `.gitattributes`, `.nvmrc`, and a hardened `.gitignore`.
+- Optional `IWorkspaceScanner.pathExists()` (implemented by `NodeWorkspaceScanner`).
+
+### Fixed
+- `docs:check` and the test suite falsely reported `LICENSE` links as broken because the scanner skips extensionless files; links now fall back to a real filesystem existence check.
+
+---
+
 ## [1.0.0] - 2026-11-07
 
 ### Added
