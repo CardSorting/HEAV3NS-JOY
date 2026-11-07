@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "theme": "strict",
+  "layers": {
+    "domain": {
+      "optimalLogicDensity": 0.15,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 5000,
+      "paths": ["src/domain", "domain"]
+    },
+    "core": {
+      "optimalLogicDensity": 0.05,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 3000,
+      "paths": ["src/core", "core"]
+    },
+    "infrastructure": {
+      "optimalLogicDensity": 0.05,
+      "maxIOEntropy": 1.0,
+      "maxComplexity": 10000,
+      "paths": ["src/infrastructure", "infrastructure", "src/adapters", "src/services", "src/integrations", "src/hosts"]
+    },
+    "plumbing": {
+      "optimalLogicDensity": 0.0,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 500,
+      "paths": ["src/plumbing", "plumbing", "src/utils", "utils", "src/shared/utils"]
+    },
+    "ui": {
+      "optimalLogicDensity": 0.0,
+      "maxIOEntropy": 1.0,
+      "maxComplexity": 15000,
+      "paths": ["src/ui", "ui", "src/cli", "webview-ui", "frontend", "src/views", "src/components"]
+    }
+  },
+  "global": {
+    "maxPathDepth": 4,
+    "maxRelativeImportDepth": 3,
+    "integrityAlertThreshold": 0.7,
+    "fileSizeTiers": {
+      "fatModuleWarning": 800,
+      "tier1Max": 1000,
+      "tier2Max": 1500,
+      "hardSimplicityCap": 2500
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    "coverage",
+    ".git",
+    "*.d.ts",
+    "*.min.js",
+    "*.bundle.js"
+  ]
+}
+

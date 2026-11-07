@@ -1,0 +1,35 @@
+# [LAYER: INFRASTRUCTURE]
+# Portable GitHub Actions workflow template for HEAV3NS-JOY architectural governance.
+# Copy into `.github/workflows/joyzoning.yml` in any target repository.
+
+name: Joyzoning Architectural Sovereignty
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  sovereign-audit:
+    name: Spider & Joyzoning Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Joyzoning Audit (GitHub Annotations)
+        run: node ./bin/joy-check.mjs . --format github
+
+      - name: Publish Markdown Summary
+        if: always()
+        run: node ./bin/joy-check.mjs . --format markdown --mermaid >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Generate SARIF Report
+        if: always()
+        run: node ./bin/joy-check.mjs . --sarif > joyzoning.sarif
+

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://heav3ns-joy.local/schemas/spider.spec.json",
+  "description": "Custom path-to-zone mapping template for adopting Joyzoning in repositories with non-standard directory structures.",
+  "layers": {
+    "domain": [
+      "src/domain",
+      "packages/*/src/domain",
+      "internal/domain",
+      "app/models",
+      "app/contracts"
+    ],
+    "core": [
+      "src/core",
+      "packages/*/src/core",
+      "internal/core",
+      "app/controllers",
+      "app/usecases",
+      "app/workflows"
+    ],
+    "infrastructure": [
+      "src/infrastructure",
+      "packages/*/src/infrastructure",
+      "internal/infrastructure",
+      "app/adapters",
+      "app/repositories",
+      "app/drivers",
+      "app/clients"
+    ],
+    "plumbing": [
+      "src/plumbing",
+      "src/utils",
+      "packages/*/src/plumbing",
+      "pkg/plumbing",
+      "app/utils",
+      "app/helpers"
+    ],
+    "ui": [
+      "src/ui",
+      "src/cli",
+      "packages/*/src/ui",
+      "cmd",
+      "app/views",
+      "app/components",
+      "web"
+    ]
+  },
+  "compositionRoots": [
+    "src/index.ts",
+    "src/main.ts",
+    "bin/joy-check.mjs",
+    "cmd/main.go",
+    "src/main.rs"
+  ]
+}
+

@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "theme": "strict",
+  "layers": {
+    "domain": {
+      "optimalLogicDensity": 0.15,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 5000,
+      "paths": ["src/domain", "spec", "examples/typescript/src/domain", "examples/polyglot/python/domain", "examples/polyglot/go/domain", "examples/polyglot/rust/domain"]
+    },
+    "core": {
+      "optimalLogicDensity": 0.05,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 3000,
+      "paths": ["src/core", "workflows", "examples/typescript/src/core", "examples/polyglot/python/core", "examples/polyglot/go/core", "examples/polyglot/rust/core"]
+    },
+    "infrastructure": {
+      "optimalLogicDensity": 0.05,
+      "maxIOEntropy": 1.0,
+      "maxComplexity": 10000,
+      "paths": ["src/infrastructure", "configs", "examples/typescript/src/infrastructure", "examples/polyglot/python/infrastructure", "examples/polyglot/go/infrastructure", "examples/polyglot/rust/infrastructure"]
+    },
+    "plumbing": {
+      "optimalLogicDensity": 0.0,
+      "maxIOEntropy": 0.0,
+      "maxComplexity": 500,
+      "paths": ["src/plumbing", "src/utils", "examples/typescript/src/plumbing", "examples/polyglot/python/plumbing", "examples/polyglot/go/plumbing", "examples/polyglot/rust/plumbing"]
+    },
+    "ui": {
+      "optimalLogicDensity": 0.0,
+      "maxIOEntropy": 1.0,
+      "maxComplexity": 15000,
+      "paths": ["src/ui", "bin", "examples/typescript/src/ui", "examples/polyglot/python/ui", "examples/polyglot/go/ui", "examples/polyglot/rust/ui"]
+    }
+  },
+  "global": {
+    "maxPathDepth": 4,
+    "maxRelativeImportDepth": 3,
+    "integrityAlertThreshold": 0.7,
+    "fileSizeTiers": {
+      "fatModuleWarning": 800,
+      "tier1Max": 1000,
+      "tier2Max": 1500,
+      "hardSimplicityCap": 2500
+    }
+  },
+  "compositionRoots": [
+    "bin/joy-check.mjs",
+    "bin/docs-check.mjs",
+    "src/index.mjs",
+    "examples/typescript/src/index.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    "coverage",
+    ".git",
+    "tests/fixtures",
+    "commission.md"
+  ]
+}
+
