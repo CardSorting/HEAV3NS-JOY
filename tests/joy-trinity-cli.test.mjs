@@ -48,7 +48,13 @@ describe("Suite 27: joy-trinity shell contract", () => {
       assert.equal(run(["db", "push", "docs", "--root", root, "--data", '{"id":"7","n":1}']).status, 0);
       assert.deepEqual(run(["db", "select", "docs", "--root", root, "--where", "id=7"]).json.result, [{ id: "7", n: 1 }]);
       assert.equal(run(["swarm", "knowledge", "store", "--root", root, "--cwd", "/w", "--note", "run tests first"]).json.result.stored, 1);
+      const rejectedNote = run(["swarm", "knowledge", "store", "--root", root, "--cwd", "/w", "--note", "my secret is 123"]).json.result;
+      assert.equal(rejectedNote.stored, 0);
+      assert.deepEqual(rejectedNote.rejectedReasons, [{ reason: "SENSITIVE_KEYWORD" }]);
       assert.equal(run(["swarm", "knowledge", "recall", "--root", root, "--cwd", "/w"]).json.result[0].content, "run tests first");
+      assert.equal(run(["swarm", "knowledge", "search", "--root", root, "--cwd", "/w", "--query", "tests"]).json.result[0].content, "run tests first");
+      assert.equal(run(["swarm", "knowledge", "prune", "--root", root, "--cwd", "/w", "--query", "tests"]).json.result.removed, 1);
+      assert.equal(run(["swarm", "knowledge", "recall", "--root", root, "--cwd", "/w"]).json.result.length, 0);
     } finally {
       fs.rmSync(root, { recursive: true, force: true });
     }

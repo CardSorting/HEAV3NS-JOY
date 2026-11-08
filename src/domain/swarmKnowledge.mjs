@@ -41,14 +41,26 @@ export function legionWorkspaceScope(cwd) {
 }
 
 /**
+ * Diagnoses whether an observation is safe to persist and replay, returning a structured reason when rejected.
+ * @param {unknown} value
+ * @returns {{ ok: boolean, reason?: "EMPTY_OR_NOT_STRING" | "TOO_LONG" | "CONTROL_OR_MULTILINE" | "SENSITIVE_KEYWORD" | "CREDENTIAL_PATTERN" }}
+ */
+export function diagnoseLegionObservation(value) {
+  if (typeof value !== "string" || value.length < 1) return { ok: false, reason: "EMPTY_OR_NOT_STRING" };
+  if (value.length > MAX_LEGION_OBSERVATION_LENGTH) return { ok: false, reason: "TOO_LONG" };
+  if (/[\r\n\x00-\x1f\x7f]/.test(value)) return { ok: false, reason: "CONTROL_OR_MULTILINE" };
+  if (SENSITIVE_WORDS.test(value)) return { ok: false, reason: "SENSITIVE_KEYWORD" };
+  if (CREDENTIAL_PATTERNS.some((pattern) => pattern.test(value))) return { ok: false, reason: "CREDENTIAL_PATTERN" };
+  return { ok: true };
+}
+
+/**
  * Whether an observation is safe to persist and replay into future prompts.
  * @param {unknown} value
  * @returns {boolean}
  */
 export function isReusableLegionObservation(value) {
-  if (typeof value !== "string" || value.length < 1 || value.length > MAX_LEGION_OBSERVATION_LENGTH) return false;
-  if (/[\r\n\x00-\x1f\x7f]/.test(value) || SENSITIVE_WORDS.test(value)) return false;
-  return !CREDENTIAL_PATTERNS.some((pattern) => pattern.test(value));
+  return diagnoseLegionObservation(value).ok;
 }
 
 /**

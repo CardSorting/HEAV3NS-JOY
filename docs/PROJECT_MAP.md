@@ -23,7 +23,7 @@ This map reflects the **actual** layout of the **HEAV3NS-JOY** workspace. Paths 
 | **`plugin/`** | `UI` | Checked-in Claude Code marketplace plugin (skills, commands, subagent, MCP config) |
 | **`spec/`** | `DOMAIN` | Normative specifications (`00-CANONICAL-MODEL.md` through `05-PORTABLE-SUBSTRATE-TRINITY.md`) |
 | **`workflows/`** | `CORE` | Operational playbooks (`01-TRIAD-AUDIT-PLANNING.md` through `05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`) |
-| **`docs/`** | `UI` | Documentation hub, architecture maps, papers (`companion-brief`, `philosophy`, `whitepaper`), and `api/` reference |
+| **`docs/`** | `UI` | Documentation hub, ADRs (`docs/adr/`), operational playbooks (`docs/playbooks/`), engineering wiki (`docs/wiki/`), blameless postmortems (`docs/postmortems/`), knowledge base (`docs/kb/`), architecture maps (`docs/architecture/`), papers (`docs/papers/`), and `docs/api/` reference |
 | **`configs/`** | `INFRASTRUCTURE` | Drop-in `stability.config.json`, `spider.spec.json`, `pre-commit-hook.sh`, and `github-action.yml` templates |
 | **`examples/`** | `DOMAIN`..`UI` | Self-contained `examples/typescript/` and `examples/polyglot/` (Python, Go, Rust) reference projects |
 | **`tests/`** | `UI` | 22 automated verification suites plus CLI smoke tests (`joyzoning.test.mjs`, `joyzoning-advanced.test.mjs`, `trinity-portability.test.mjs`, `cli-smoke.test.mjs`) |

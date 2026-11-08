@@ -293,15 +293,33 @@ async function runSwarmProcesses(options) {
 
 async function runKnowledge(positional, options) {
   const action = positional[0];
-  if (action !== "store" && action !== "recall") throw new UsageError(`unknown knowledge action '${action}'`, "use: store | recall");
+  if (!["store", "recall", "search", "prune"].includes(action)) {
+    throw new UsageError(`unknown knowledge action '${action}'`, "use: store | recall | search | prune");
+  }
   if (action === "store" && !options.note?.length) throw new UsageError("swarm knowledge store requires at least one --note");
+  if (action === "search" && !options.query) throw new UsageError("swarm knowledge search requires --query <substring>");
   return withBroccoli(options, async (broccoli) => {
     const { knowledge } = createAgentSwarm({ db: broccoli.db, persistConfig: false });
     const cwd = resolve(options.cwd);
     if (action === "store") {
+      const diagnostics = options.note.map((n) => ({ note: n, ...knowledge.diagnose(n) }));
+      const rejectedReasons = diagnostics.filter((d) => !d.ok).map((d) => ({ reason: d.reason }));
       const stored = await knowledge.store(cwd, "joy-trinity", options.note);
       await broccoli.db.flush();
-      return { stored, rejected: options.note.length - stored, hint: stored < options.note.length ? "notes are skipped when they look like secrets, contain control characters, exceed 500 characters, or already exist" : undefined };
+      return {
+        stored,
+        rejected: options.note.length - stored,
+        ...(rejectedReasons.length ? { rejectedReasons } : {}),
+        hint: stored < options.note.length ? "notes are skipped when they look like secrets, contain control characters, exceed 500 characters, or already exist" : undefined
+      };
+    }
+    if (action === "prune") {
+      const result = await knowledge.prune(cwd, { query: options.query, all: Boolean(options.all) });
+      await broccoli.db.flush();
+      return result;
+    }
+    if (action === "search" || options.query) {
+      return knowledge.search(cwd, options.query);
     }
     return knowledge.recall(cwd);
   });

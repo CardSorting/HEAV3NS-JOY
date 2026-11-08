@@ -34,7 +34,13 @@
 - [spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md](spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md)
 - [spec/04-ENFORCEMENT-AND-LENIENCY.md](spec/04-ENFORCEMENT-AND-LENIENCY.md)
 
-## Reference
+## Reference, Wiki, ADRs, Playbooks, Postmortems, & Knowledge Base
+- [docs/README.md](docs/README.md): central documentation hub (Diátaxis + Institutional Memory)
+- [docs/wiki/README.md](docs/wiki/README.md): mental models, polyglot cookbook, agent harnesses, & entropy math encyclopedia
+- [docs/adr/README.md](docs/adr/README.md): Architecture Decision Records (`ADR-0001..0009`) with verification commands
+- [docs/playbooks/README.md](docs/playbooks/README.md): step-by-step incident & migration playbooks (`PB-01..05`)
+- [docs/postmortems/README.md](docs/postmortems/README.md): blameless SRE postmortems (`PM-001..005`) linked to code invariants & tests
+- [docs/kb/README.md](docs/kb/README.md): 3-tier knowledge-based handling (`SwarmKnowledgeService`), symptom diagnosis matrix, & technical FAQ
 - [docs/api/cli.md](docs/api/cli.md), [docs/api/errors.md](docs/api/errors.md), [docs/GLOSSARY.md](docs/GLOSSARY.md)
 
 ## Adopting in another repository

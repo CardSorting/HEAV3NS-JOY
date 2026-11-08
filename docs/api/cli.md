@@ -121,10 +121,11 @@ Emits a ready-to-save `.vscode/problem-matcher.json` (v2) matching `--format com
 
 ```bash
 npm run docs:check
-# or directly:
-node bin/docs-check.mjs
+# or directly (supports --json for machine-readable output):
+node bin/docs-check.mjs .
+node bin/docs-check.mjs . --json
 ```
-Verifies that all required docs exist, start with valid `<!-- [LAYER: ...] -->` headers, contain zero broken relative links, include required `docs/README.md` sections and Mermaid diagrams, and match live codebase metrics.
+Verifies that all required docs (including ADRs, Playbooks, Wiki, Postmortems, and Knowledge Base pages) exist, start with valid `<!-- [LAYER: ...] -->` headers, are indexed in their hub `README.md`, contain zero broken relative links, include required `docs/README.md` sections and Mermaid diagrams, and match live codebase metrics.
 
 ---
 
@@ -151,7 +152,7 @@ single source of truth for parsing, validation, help, suggestions, and completio
 | `swarm report <id> --assignment A --status completed\|failed [--summary T]` (`--summary -` reads stdin) | Record a specialist outcome; `Heuristic:` lines are persisted |
 | `swarm retry <id> --assignment A` / `status <id>` / `list` / `finish <id>` / `prune [--older-than-ms N] [--include-open]` | Retry, inspect, list, close out, and clean up formations |
 | `swarm run --task T --exec '["cmd","arg"]' [--cwd D] [--max N] [--strategy S] [--timeout-ms N]` | Run specialists as external processes (prompt on stdin and `$JOY_SWARM_PROMPT_FILE`; stdout = report; SIGTERM then SIGKILL on timeout) |
-| `swarm config` / `swarm knowledge store\|recall --cwd D [--note T]` | Effective swarm config; workspace heuristics |
+| `swarm config` / `swarm knowledge store\|recall\|search\|prune --cwd D [--note T] [--query Q] [--all]` | Effective swarm config; store, recall, search, or prune durable workspace heuristics ([Knowledge Architecture](../kb/knowledge-handling-architecture.md)) |
 
 **Global options:** `--root <dir>` (or `$JOY_STATE_ROOT`, default `./.joy-state`), `--format json|ndjson|text` (or `$JOY_FORMAT`), `--lock-timeout-ms N`, `--help`, `--version`.
 

@@ -30,7 +30,10 @@ export function buildDoctorReport(
   serializedNodes,
   { violationCount, advisoryCount, entropyScore, runtimeCycles }
 ) {
-  const afferentValues = serializedNodes.map((n) => n.metrics.afferentCoupling);
+  const codeNodes = serializedNodes.filter((n) => !String(n.path || "").endsWith(".md"));
+  const afferentValues = (codeNodes.length > 0 ? codeNodes : serializedNodes).map(
+    (n) => n.metrics.afferentCoupling
+  );
   const giniCoefficient = computeGiniCoefficient(afferentValues);
   const rippleProbability = computeRippleProbability(nodes);
   const buildHealth = computeBuildHealth({

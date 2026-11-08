@@ -508,46 +508,43 @@ export function scaffoldWorkspaceConfig(scanner, rootDir, options = {}) {
 }
 
 const REQUIRED_WORKSPACE_DOCS = Object.freeze([
-  "README.md",
-  "AGENTS.md",
-  "SOUL.md",
-  "VALIDATION_REPORT.md",
-  "templates/AGENTS.adopter.md",
-  "docs/README.md",
-  "docs/DOCS_GUIDE.md",
-  "docs/AGENT_STACK.md",
-  "docs/PORTABLE_TRINITY.md",
-  "docs/PROJECT_MAP.md",
-  "docs/CODE_TO_DOC_MAP.md",
-  "docs/CONSTITUTION.md",
-  "docs/CODEBASE_STANDARDS.md",
-  "docs/MAINTAINER.md",
-  "docs/GETTING_STARTED.md",
-  "docs/GLOSSARY.md",
-  "docs/CI_INTEGRATION.md",
-  "docs/PROPAGATION.md",
-  "docs/OPERATIONS.md",
-  "docs/RELEASING.md",
-  "docs/SECURITY_BEST_PRACTICES.md",
-  "docs/architecture/current.md",
-  "docs/papers/README.md",
-  "docs/papers/companion-brief.md",
-  "docs/papers/philosophy.md",
-  "docs/papers/whitepaper.md",
-  "docs/api/README.md",
-  "docs/api/public-api.md",
-  "docs/api/cli.md",
-  "docs/api/errors.md",
-  "spec/00-CANONICAL-MODEL.md",
-  "spec/01-SYNTAX-AND-HEADERS.md",
-  "spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md",
-  "spec/03-METRICS-AND-FORENSICS.md",
-  "spec/04-ENFORCEMENT-AND-LENIENCY.md",
-  "spec/05-PORTABLE-SUBSTRATE-TRINITY.md",
-  "workflows/01-TRIAD-AUDIT-PLANNING.md",
-  "workflows/02-TACTICAL-REFACTORING-SOPS.md",
-  "workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md",
-  "workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md",
+  "README.md", "AGENTS.md", "SOUL.md", "VALIDATION_REPORT.md", "templates/AGENTS.adopter.md",
+  "docs/README.md", "docs/DOCS_GUIDE.md", "docs/AGENT_STACK.md", "docs/PORTABLE_TRINITY.md",
+  "docs/PROJECT_MAP.md", "docs/CODE_TO_DOC_MAP.md", "docs/CONSTITUTION.md", "docs/CODEBASE_STANDARDS.md",
+  "docs/MAINTAINER.md", "docs/GETTING_STARTED.md", "docs/GLOSSARY.md", "docs/CI_INTEGRATION.md",
+  "docs/PROPAGATION.md", "docs/OPERATIONS.md", "docs/RELEASING.md", "docs/SECURITY_BEST_PRACTICES.md",
+  "docs/architecture/current.md", "docs/papers/README.md", "docs/papers/companion-brief.md",
+  "docs/papers/philosophy.md", "docs/papers/whitepaper.md", "docs/api/README.md",
+  "docs/api/public-api.md", "docs/api/cli.md", "docs/api/errors.md",
+  "docs/adr/README.md", "docs/adr/0000-adr-template.md",
+  "docs/adr/0001-five-canonical-zones-and-geographic-alignment.md",
+  "docs/adr/0002-zero-dependency-polyglot-lexical-scanner.md",
+  "docs/adr/0003-strike-one-vs-advisory-enforcement-model.md",
+  "docs/adr/0004-proof-before-mutation-and-sharded-cas.md",
+  "docs/adr/0005-joyride-eleven-point-fingerprint-cache.md",
+  "docs/adr/0006-portable-trinity-and-shell-json-contract.md",
+  "docs/adr/0007-dual-composition-roots-and-frozen-api.md",
+  "docs/adr/0008-non-destructive-agent-installer-and-safe-mcp.md",
+  "docs/adr/0009-diataxis-documentation-and-knowledge-governance.md",
+  "docs/playbooks/README.md", "docs/playbooks/architectural-violation-remediation.md",
+  "docs/playbooks/trinity-lock-and-wal-recovery.md", "docs/playbooks/swarm-stalls-and-failover.md",
+  "docs/playbooks/agent-drift-and-mcp-troubleshooting.md",
+  "docs/playbooks/brownfield-migration-and-monorepo-rollout.md",
+  "docs/wiki/README.md", "docs/wiki/mental-models.md", "docs/wiki/polyglot-recipes.md",
+  "docs/wiki/mcp-and-agent-harnesses.md", "docs/wiki/metrics-and-entropy-encyclopedia.md",
+  "docs/postmortems/README.md", "docs/postmortems/0000-postmortem-template.md",
+  "docs/postmortems/PM-001-agent-infinite-repair-loop-on-advisory-warnings.md",
+  "docs/postmortems/PM-002-multi-process-wal-contention-and-orphaned-root-locks.md",
+  "docs/postmortems/PM-003-template-literal-false-positive-imports-and-bom-headers.md",
+  "docs/postmortems/PM-004-cache-poisoning-and-secret-leakage-in-agent-scratchpads.md",
+  "docs/postmortems/PM-005-prompt-injection-and-unverified-replay-in-specialist-swarms.md",
+  "docs/kb/README.md", "docs/kb/knowledge-handling-architecture.md",
+  "docs/kb/symptom-diagnosis-matrix.md", "docs/kb/faq-and-edge-cases.md",
+  "spec/00-CANONICAL-MODEL.md", "spec/01-SYNTAX-AND-HEADERS.md",
+  "spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md", "spec/03-METRICS-AND-FORENSICS.md",
+  "spec/04-ENFORCEMENT-AND-LENIENCY.md", "spec/05-PORTABLE-SUBSTRATE-TRINITY.md",
+  "workflows/01-TRIAD-AUDIT-PLANNING.md", "workflows/02-TACTICAL-REFACTORING-SOPS.md",
+  "workflows/03-ADOPTING-IN-EXISTING-PROJECTS.md", "workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md",
   "workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md"
 ]);
 
@@ -559,6 +556,14 @@ const REQUIRED_DOCS_README_SECTIONS = Object.freeze([
   "## Release & policy",
   "## Local development",
   "## Principles"
+]);
+
+const TAXONOMY_RULES = Object.freeze([
+  { prefix: "docs/adr/", hub: "docs/adr/README.md", key: "adrs", skip: ["README.md", "0000-adr-template.md"], sections: ["## Status", "## Context", "## Decision", "## Consequences", "## Verification"] },
+  { prefix: "docs/playbooks/", hub: "docs/playbooks/README.md", key: "playbooks", skip: ["README.md"], sections: ["## Triage at a glance", "## Remediation steps", "## Verification"] },
+  { prefix: "docs/wiki/", hub: "docs/wiki/README.md", key: "wikiPages", skip: ["README.md"], sections: [] },
+  { prefix: "docs/postmortems/", hub: "docs/postmortems/README.md", key: "postmortems", skip: ["README.md", "0000-postmortem-template.md"], sections: ["## Summary", "## Root cause", "## Action items", "## Lessons learned"] },
+  { prefix: "docs/kb/", hub: "docs/kb/README.md", key: "kbArticles", skip: ["README.md"], sections: [] }
 ]);
 
 /**
@@ -635,16 +640,10 @@ export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
       }
     }
     for (const reqLink of [
-      "AGENT_STACK.md",
-      "PORTABLE_TRINITY.md",
-      "GETTING_STARTED.md",
-      "OPERATIONS.md",
-      "MAINTAINER.md",
-      "PROJECT_MAP.md",
-      "CODE_TO_DOC_MAP.md",
-      "papers/companion-brief.md",
-      "papers/philosophy.md",
-      "papers/whitepaper.md"
+      "AGENT_STACK.md", "PORTABLE_TRINITY.md", "GETTING_STARTED.md", "OPERATIONS.md",
+      "MAINTAINER.md", "PROJECT_MAP.md", "CODE_TO_DOC_MAP.md", "papers/companion-brief.md",
+      "papers/philosophy.md", "papers/whitepaper.md", "adr/README.md", "playbooks/README.md",
+      "wiki/README.md", "postmortems/README.md", "kb/README.md"
     ]) {
       if (!docsReadme.includes(reqLink)) {
         missingSections.push(`docs/README.md missing required link: ${reqLink}`);
@@ -652,6 +651,25 @@ export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
     }
     if (!docsReadme.includes("```mermaid")) {
       missingSections.push("docs/README.md missing Mermaid diagram");
+    }
+  }
+
+  const taxonomyCounts = { adrs: 0, playbooks: 0, wikiPages: 0, postmortems: 0, kbArticles: 0 };
+  for (const rule of TAXONOMY_RULES) {
+    const hubContent = fileMap.get(rule.hub) || "";
+    for (const [relPath, content] of markdownFiles) {
+      if (!relPath.startsWith(rule.prefix)) continue;
+      const base = relPath.slice(rule.prefix.length);
+      if (rule.skip.includes(base) || base.includes("/")) continue;
+      taxonomyCounts[rule.key] += 1;
+      if (!hubContent.includes(base)) {
+        missingSections.push(`${rule.hub} missing index link to: ${base}`);
+      }
+      for (const sec of rule.sections) {
+        if (!content.includes(sec)) {
+          missingSections.push(`${relPath} missing required section: ${sec}`);
+        }
+      }
     }
   }
 
@@ -742,6 +760,7 @@ export function verifyWorkspaceDocs(scanner, rootDir, options = {}) {
     requiredDocsChecked: REQUIRED_WORKSPACE_DOCS.length,
     markdownFilesScanned: markdownFiles.length,
     linksChecked,
+    taxonomyCounts,
     missingDocs,
     missingHeaders,
     missingSections,

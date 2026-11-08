@@ -30,6 +30,9 @@ _Companion to the [Technical Whitepaper](whitepaper.md). All figures below are m
 | BroccoliDB runtime modes | **6** | `RUNTIME_MODES` in [`src/domain/broccoliRules.mjs`](../../src/domain/broccoliRules.mjs) |
 | Runtime graph integrity diagnostics (`RTG-001..008`) | **8** | `verifyRuntimeGraphIntegrity()` in [`src/domain/broccoliRules.mjs`](../../src/domain/broccoliRules.mjs) |
 | Tactical refactoring SOPs | **9** | [`workflows/02-TACTICAL-REFACTORING-SOPS.md`](../../workflows/02-TACTICAL-REFACTORING-SOPS.md) |
+| Architecture Decision Records (MADR) | **9** (`ADR-0001..0009`) | [`docs/adr/README.md`](../adr/README.md) |
+| Operational Playbooks & Blameless Postmortems | **5** playbooks · **5** postmortems | [`docs/playbooks/README.md`](../playbooks/README.md) · [`docs/postmortems/README.md`](../postmortems/README.md) |
+| Concept Wiki & Knowledge Base Articles | **4** wiki guides · **3** KB articles | [`docs/wiki/README.md`](../wiki/README.md) · [`docs/kb/README.md`](../kb/README.md) |
 | CLI output formats (`--format`) | **10** | [`bin/joy-check.mjs`](../../bin/joy-check.mjs) |
 | Max relative import parent traversal | **3** (`../../..`) | `SPI-209` in [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) |
 | Tier 1 Optimal module size cap | **800** lines | `SPI-203` in [`src/domain/joyRules.mjs`](../../src/domain/joyRules.mjs) |
@@ -114,5 +117,10 @@ node ./bin/joy-check.mjs . --stats
 | [Philosophy](philosophy.md) | Values — sovereign agency & proof before mutation |
 | [Whitepaper](whitepaper.md) | Engineers — full mathematical & runtime depth |
 | [Architecture (current)](../architecture/current.md) | Module map & execution flow |
+| [ADRs (`ADR-0001..0009`)](../adr/README.md) | Architectural decision records & trade-offs |
+| [Operational Playbooks (`PB-01..05`)](../playbooks/README.md) | Incident triage & remediation runbooks |
+| [Concept Wiki](../wiki/README.md) | Mental models, polyglot recipes, & math encyclopedia |
+| [Blameless Postmortems (`PM-001..005`)](../postmortems/README.md) | Failure analyses & permanent code guardrails |
+| [Knowledge Base & Handling (`KB-01..03`)](../kb/README.md) | 3-Tier Knowledge-Based Handling & diagnosis matrix |
 | [Project map](../PROJECT_MAP.md) | 1-to-1 file paths |
 | [Public API](../api/public-api.md) | 84 exported functions & classes |

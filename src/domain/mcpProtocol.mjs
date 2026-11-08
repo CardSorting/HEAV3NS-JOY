@@ -192,9 +192,9 @@ export const MCP_TOOLS = [
   },
   {
     name: "joy_swarm_knowledge", title: "Workspace heuristics", cli: "trinity", pathArgs: ["root", "cwd"], annotations: WRITE,
-    description: "Store or recall reusable, non-secret workspace heuristics used to brief later specialists.",
-    inputSchema: obj({ action: str({ enum: ["store", "recall"] }), cwd: PATH, notes: arr(str({ maxLength: 500 })), root: ROOT }, ["action", "cwd"]),
-    argv: (a, ctx) => withRoot(a, ctx, ["swarm", "knowledge", a.action, "--cwd", a.cwd, ...multi("--note", a.notes)])
+    description: "Store, recall, search, or prune reusable, non-secret workspace heuristics used to brief later specialists.",
+    inputSchema: obj({ action: str({ enum: ["store", "recall", "search", "prune"] }), cwd: PATH, notes: arr(str({ maxLength: 500 })), query: str({ maxLength: 200 }), all: bool(), root: ROOT }, ["action", "cwd"]),
+    argv: (a, ctx) => withRoot(a, ctx, ["swarm", "knowledge", a.action, "--cwd", a.cwd, ...multi("--note", a.notes), ...opt("--query", a.query), ...(a.all ? ["--all"] : [])])
   }
 ];
 

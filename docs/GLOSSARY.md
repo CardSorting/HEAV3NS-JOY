@@ -29,3 +29,8 @@
 | **Triad Audit** | Pre-implementation review from three perspectives: Architect, Critic, SRE ([workflow 01](../workflows/01-TRIAD-AUDIT-PLANNING.md)). |
 | **Producer-before-consumer** | Implement callees (plumbing, domain, infrastructure) before their callers (core, ui). |
 | **Heal** | Automatic repair of headers (`--heal`) or stateless bindings (`--heal-stateless`). |
+| **ADR (Architecture Decision Record)** | Immutable MADR-style record in [`docs/adr/`](adr/README.md) documenting the context, considered options, decision outcome, consequences, and verification commands for an architectural choice. |
+| **Operational Playbook (`PB-xx`)** | Step-by-step incident and rollout runbook in [`docs/playbooks/`](playbooks/README.md) with a triage card, Mermaid decision tree, and verification gate. |
+| **Blameless Postmortem (`PM-xxx`)** | Engineering incident record in [`docs/postmortems/`](postmortems/README.md) tracing a failure mode via the 5 Whys to a permanent code guard, regression test, ADR, and KB entry. |
+| **Knowledge-Based Handling** | The 3-tier memory architecture in [`docs/kb/knowledge-handling-architecture.md`](kb/knowledge-handling-architecture.md): Tier 1 (`JoyRideCache` & `RuntimeStateGraph`), Tier 2 (`SwarmKnowledgeService` durable workspace heuristics), and Tier 3 (`docs/kb/`, `docs/adr/`, `docs/playbooks/`, `docs/postmortems/`). |
+| **Untrusted Blackboard** | The `SwarmKnowledgeService` pattern where `Heuristic: <fact>` lines are screened against secrets/credentials (`diagnoseLegionObservation`) and replayed inside `<workspace_heuristics trust="untrusted">`. |

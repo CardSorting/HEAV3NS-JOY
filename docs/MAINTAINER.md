@@ -32,10 +32,16 @@ npm test                            # Run all 22 test files (36 logical suites, 
 
 ### What `npm run docs:check` (`bin/docs-check.mjs`) enforces
 
-1. **Required documentation inventory**: Verifies that all 17 canonical documentation files under `docs/` (plus root `README.md`, `AGENTS.md`, `VALIDATION_REPORT.md`, `spec/00..05`, and `workflows/01..05`) exist on disk.
+1. **Required documentation inventory**: Verifies that all canonical documentation files across `docs/` (`docs/adr/`, `docs/playbooks/`, `docs/wiki/`, `docs/postmortems/`, `docs/kb/`, `docs/api/`, `docs/papers/`, `docs/architecture/`), root (`README.md`, `AGENTS.md`, `SOUL.md`, `VALIDATION_REPORT.md`), `spec/00..05`, and `workflows/01..05` exist on disk.
 2. **Joyzoning `[LAYER: ...]` header compliance**: Verifies that every markdown file in `docs/`, `spec/`, `workflows/`, and root starts with a valid `<!-- [LAYER: <ZONE>] -->` tag.
-3. **Structure guardrails on `docs/README.md`**: Enforces the presence of LUMI-standard sections (`## At a glance`, `## Project configuration`, `## Reading paths by audience`, `## Where to document what`, `## Release & policy`, `## Local development`, `## Principles`) and an embedded `mermaid` diagram.
-4. **Zero broken relative links**: Parses every markdown link `[label](target)` across `README.md`, `AGENTS.md`, `VALIDATION_REPORT.md`, `docs/**`, `spec/**`, and `workflows/**` and asserts that the target file exists on disk.
+3. **Structure & taxonomy guardrails**:
+   - Enforces the presence of LUMI-standard sections in `docs/README.md` (`## At a glance`, `## Project configuration`, `## Reading paths by audience`, `## Where to document what`, `## Release & policy`, `## Local development`, `## Principles`), links to all institutional hubs (`adr/README.md`, `playbooks/README.md`, `wiki/README.md`, `postmortems/README.md`, `kb/README.md`), and an embedded `mermaid` diagram.
+   - Verifies that every ADR (`docs/adr/0*.md`) is indexed in `docs/adr/README.md` and contains `## Status`, `## Context`, `## Decision`, `## Consequences`, and `## Verification`.
+   - Verifies that every Playbook (`docs/playbooks/*.md`) is indexed in `docs/playbooks/README.md` and contains `## Triage at a glance`, `## Remediation steps`, and `## Verification`.
+   - Verifies that every Wiki chapter (`docs/wiki/*.md`) is indexed in `docs/wiki/README.md`.
+   - Verifies that every Postmortem (`docs/postmortems/PM-*.md`) is indexed in `docs/postmortems/README.md` and contains `## Summary`, `## Root cause`, `## Action items`, and `## Lessons learned`.
+   - Verifies that every Knowledge Base article (`docs/kb/*.md`) is indexed in `docs/kb/README.md`.
+4. **Zero broken relative links**: Parses every markdown link `[label](target)` across all scanned markdown files and asserts that the target file exists on disk.
 5. **Live codebase metric parity**: Cross-checks `package.json` (`version`), `src/index.mjs` (exported symbol count), `src/domain/joyRules.mjs` (`CANONICAL_ZONES`), `src/domain/broccoliRules.mjs` (`RUNTIME_MODES`), and `src/core/JoyRideCache.mjs` (`JOYRIDE_KINDS`) against the figures published in `docs/README.md` and `docs/papers/companion-brief.md`.
 
 ---

@@ -14,6 +14,7 @@ import {
   LEGION_KNOWLEDGE_TTL_MS,
   LEGION_WORKSPACE_HEURISTIC_TYPE,
   MAX_LEGION_KNOWLEDGE_ITEMS,
+  diagnoseLegionObservation,
   isReusableLegionObservation,
   legionWorkspaceScope
 } from "../domain/swarmKnowledge.mjs";
@@ -114,5 +115,59 @@ export class SwarmKnowledgeService {
       observations.push({ content: row.content, createdAt: Number(row.createdAt), expiresAt: Number(row.expiresAt) });
     }
     return observations;
+  }
+
+  /**
+   * Diagnoses whether a raw note is admissible as a reusable heuristic.
+   * @param {unknown} raw
+   * @returns {{ ok: boolean, reason?: string }}
+   */
+  diagnose(raw) {
+    return diagnoseLegionObservation(typeof raw === "string" ? raw.trim() : raw);
+  }
+
+  /**
+   * Searches live, scope-verified observations for a workspace by case-insensitive substring.
+   * @param {string} cwd
+   * @param {string} [query]
+   * @param {number} [now]
+   * @returns {Promise<import("../domain/swarmKnowledge.mjs").LegionWorkspaceObservation[]>}
+   */
+  async search(cwd, query = "", now = Date.now()) {
+    const all = await this.recall(cwd, now);
+    const needle = String(query ?? "").trim().toLowerCase();
+    if (!needle) return all;
+    return all.filter((obs) => obs.content.toLowerCase().includes(needle));
+  }
+
+  /**
+   * Prunes expired, query-matched, or all observations for a workspace.
+   * @param {string} cwd
+   * @param {{ query?: string, all?: boolean }} [options]
+   * @param {number} [now]
+   * @returns {Promise<{ removed: number }>}
+   */
+  async prune(cwd, options = {}, now = Date.now()) {
+    const scope = this.#scope(cwd);
+    const rows = await this.#db.selectWhere(LEGION_KNOWLEDGE_TABLE, [
+      { column: "type", value: LEGION_WORKSPACE_HEURISTIC_TYPE },
+      { column: "tags", value: JSON.stringify(["legion", "workspace-heuristic", scope]) }
+    ]);
+    const needle = options.query ? String(options.query).trim().toLowerCase() : "";
+    let removed = 0;
+    for (const row of rows) {
+      const expired = Number(row.expiresAt) <= now;
+      const matchesQuery = needle ? String(row.content ?? "").toLowerCase().includes(needle) : false;
+      const shouldRemove = Boolean(options.all) || (needle ? matchesQuery : expired);
+      if (!shouldRemove) continue;
+      await this.#db.push({
+        type: "delete",
+        table: LEGION_KNOWLEDGE_TABLE,
+        where: [{ column: "id", value: row.id }],
+        layer: "domain"
+      });
+      removed++;
+    }
+    return { removed };
   }
 }

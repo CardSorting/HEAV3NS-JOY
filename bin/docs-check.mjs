@@ -2,13 +2,21 @@
 /** [LAYER: UI] */
 /**
  * Zero-dependency CLI verifier for HEAV3NS-JOY documentation guardrails (`npm run docs:check`).
- * Mirrors LUMI's `docs:check-agent-links`, `docs:check-docs-readme`, and `docs:check-readme-metrics`.
+ * Verifies required docs, ADRs, Playbooks, Wiki, Postmortems, Knowledge Base, [LAYER] headers,
+ * relative links, and live codebase metric parity.
  */
 
 import { runJoyDocsCheck } from "../src/index.mjs";
 
-const targetDir = process.argv[2] || ".";
+const args = process.argv.slice(2);
+const wantJson = args.includes("--json");
+const targetDir = args.find((a) => !a.startsWith("-")) || ".";
 const result = runJoyDocsCheck(targetDir);
+
+if (wantJson) {
+  console.log(JSON.stringify(result, null, 2));
+  process.exit(result.passed ? 0 : 1);
+}
 
 if (!result.passed) {
   console.error("======================================================================");
@@ -33,7 +41,7 @@ if (!result.passed) {
   process.exit(1);
 }
 
+const tc = result.taxonomyCounts || {};
 console.log(
-  `docs:check OK — ${result.requiredDocsChecked} required docs, ${result.markdownFilesScanned} markdown files (100% [LAYER] tagged), ${result.linksChecked} relative links verified, live metrics in sync`
+  `docs:check OK — ${result.requiredDocsChecked} required docs (${tc.adrs || 0} ADRs, ${tc.playbooks || 0} playbooks, ${tc.wikiPages || 0} wiki pages, ${tc.postmortems || 0} postmortems, ${tc.kbArticles || 0} KB articles), ${result.markdownFilesScanned} markdown files (100% [LAYER] tagged), ${result.linksChecked} relative links verified, live metrics in sync`
 );
-

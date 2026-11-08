@@ -117,6 +117,8 @@ blackboard of sanitized workspace heuristics. The `parentEngine` is any object m
 
 `InMemorySwarmLeaseService` is process-local. For multi-process exclusion, provide another `ISwarmLeaseService`.
 
+`SwarmKnowledgeService` manages workspace-scoped heuristics (`swarm knowledge store|recall|search|prune --cwd <dir> [--query <q>] [--all]`): notes are validated by `isSafeLegionObservation` / `diagnoseLegionObservation` (rejecting secrets, credentials, multiline/control characters, and notes `> 500` chars with machine-readable `rejectedReasons`), deduplicated and bounded (`<= 24` notes per workspace, 30-day TTL), and injected into specialist prompts (`<= 5` recalled notes). See [`docs/kb/knowledge-handling-architecture.md`](kb/knowledge-handling-architecture.md) for the full 3-tier knowledge-handling architecture and [`docs/playbooks/trinity-lock-and-wal-recovery.md`](playbooks/trinity-lock-and-wal-recovery.md) for operational runbooks.
+
 Configuration comes from the `~/.heav3ns/agent-swarm.json` document and `JOY_SWARM_*` environment variables (e.g. `JOY_SWARM_ENABLED`, `JOY_SWARM_LEGION_MAX_SPECIALISTS`; see `AGENT_SWARM_ENVIRONMENT_VARIABLES`); `createAgentSwarm({ persistConfig: false })` keeps configuration in memory.
 
 ## Hardening guarantees

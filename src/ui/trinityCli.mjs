@@ -187,13 +187,19 @@ export const COMMANDS = {
         examples: [`joy-trinity swarm run --task "audit the auth module" --exec '["my-agent","--print"]'`]
       },
       knowledge: {
-        summary: "Store or recall workspace heuristics",
-        args: [{ name: "action", description: "store | recall", required: true }],
+        summary: "Store, recall, search, or prune workspace heuristics",
+        args: [{ name: "action", description: "store | recall | search | prune", required: true }],
         options: {
           cwd: { type: "string", required: true, description: "workspace directory" },
-          note: { type: "multi", description: "heuristic to store; repeatable" }
+          note: { type: "multi", description: "heuristic to store; repeatable" },
+          query: { type: "string", description: "case-insensitive filter substring for recall, search, or prune" },
+          all: { type: "flag", description: "with prune, remove all heuristics for this workspace" }
         },
-        examples: [`joy-trinity swarm knowledge store --cwd . --note "run npm run verify before committing"`]
+        examples: [
+          `joy-trinity swarm knowledge store --cwd . --note "run npm run verify before committing"`,
+          `joy-trinity swarm knowledge search --cwd . --query "verify"`,
+          `joy-trinity swarm knowledge prune --cwd .`
+        ]
       }
     }
   }

@@ -15,19 +15,21 @@ Use this lookup table whenever you modify code in `src/`, `bin/`, or `configs/` 
 | `src/domain/managedBlock.mjs`, `src/domain/agentTemplates.mjs`, `src/domain/agentTargets.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) · [`SOUL.md`](../SOUL.md) |
 | `src/domain/mcpProtocol.mjs`, `src/domain/jsonSchemaLite.mjs` | [api/cli.md](api/cli.md) · [`AGENTS.md`](../AGENTS.md) |
 | `src/domain/interfaces/IProjectFiles.mjs`, `src/domain/interfaces/IToolRunner.mjs`, `src/domain/interfaces/IPathGuard.mjs`, `src/domain/interfaces/IResourceReader.mjs` | [`spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md`](../spec/02-DEPENDENCY-AND-COMPOSITION-RULES.md) · [api/cli.md](api/cli.md) |
+| `src/domain/swarmKnowledge.mjs`, `src/domain/swarm*.mjs`, `src/domain/bufferedDbOps.mjs` | [kb/knowledge-handling-architecture.md](kb/knowledge-handling-architecture.md) · [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [adr/0006-portable-trinity-and-shell-json-contract.md](adr/0006-portable-trinity-and-shell-json-contract.md) |
 
 ## Core Orchestration Engines (`src/core/`)
 
 | Source | Documentation |
 |--------|---------------|
-| `src/core/SpiderEngine.mjs` | [Architecture (current)](architecture/current.md) · [`spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md) |
-| `src/core/SpiderToolkit.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [`workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`](../workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md) · [api/public-api.md](api/public-api.md) |
-| `src/core/StabilityDoctor.mjs` | [`spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md) · [api/cli.md](api/cli.md) |
-| `src/core/RefactorHealer.mjs` | [`workflows/02-TACTICAL-REFACTORING-SOPS.md`](../workflows/02-TACTICAL-REFACTORING-SOPS.md) · [api/public-api.md](api/public-api.md) |
-| `src/core/JoyRideCache.mjs` | [`workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md`](../workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md) · [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [api/public-api.md](api/public-api.md) |
-| `src/core/BroccoliRuntime.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [`workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`](../workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md) · [api/public-api.md](api/public-api.md) |
-| `src/core/RuntimeStateGraph.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [Whitepaper §6](papers/whitepaper.md) |
-| `src/core/AgentInstaller.mjs`, `src/core/McpServer.mjs` | [api/cli.md](api/cli.md) · [`README.md`](../README.md) · [`AGENTS.md`](../AGENTS.md) |
+| `src/core/SpiderEngine.mjs` | [Architecture (current)](architecture/current.md) · [`spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md) · [adr/0003-strike-one-vs-advisory-enforcement-model.md](adr/0003-strike-one-vs-advisory-enforcement-model.md) · [playbooks/architectural-violation-remediation.md](playbooks/architectural-violation-remediation.md) |
+| `src/core/SpiderToolkit.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [`workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md`](../workflows/05-PORTABLE-SPIDER-AND-BROCCOLIDB.md) · [api/public-api.md](api/public-api.md) · [adr/0009-diataxis-documentation-and-knowledge-governance.md](adr/0009-diataxis-documentation-and-knowledge-governance.md) |
+| `src/core/StabilityDoctor.mjs` | [`spec/03-METRICS-AND-FORENSICS.md`](../spec/03-METRICS-AND-FORENSICS.md) · [api/cli.md](api/cli.md) · [wiki/metrics-and-entropy-encyclopedia.md](wiki/metrics-and-entropy-encyclopedia.md) |
+| `src/core/RefactorHealer.mjs` | [`workflows/02-TACTICAL-REFACTORING-SOPS.md`](../workflows/02-TACTICAL-REFACTORING-SOPS.md) · [api/public-api.md](api/public-api.md) · [playbooks/architectural-violation-remediation.md](playbooks/architectural-violation-remediation.md) |
+| `src/core/JoyRideCache.mjs` | [`workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md`](../workflows/04-EXECUTION-ERGONOMICS-JOYRIDE.md) · [adr/0005-joyride-eleven-point-fingerprint-cache.md](adr/0005-joyride-eleven-point-fingerprint-cache.md) · [postmortems/PM-004-cache-poisoning-and-secret-leakage-in-agent-scratchpads.md](postmortems/PM-004-cache-poisoning-and-secret-leakage-in-agent-scratchpads.md) |
+| `src/core/BroccoliRuntime.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [adr/0004-proof-before-mutation-and-sharded-cas.md](adr/0004-proof-before-mutation-and-sharded-cas.md) · [api/public-api.md](api/public-api.md) |
+| `src/core/RuntimeStateGraph.mjs` | [`spec/05-PORTABLE-SUBSTRATE-TRINITY.md`](../spec/05-PORTABLE-SUBSTRATE-TRINITY.md) · [Whitepaper §6](papers/whitepaper.md) · [adr/0004-proof-before-mutation-and-sharded-cas.md](adr/0004-proof-before-mutation-and-sharded-cas.md) |
+| `src/core/SwarmKnowledgeService.mjs`, `src/core/AgentSwarmDispatcher.mjs`, `src/core/SwarmFormationLedger.mjs`, `src/core/BufferedDb.mjs` | [kb/knowledge-handling-architecture.md](kb/knowledge-handling-architecture.md) · [PORTABLE_TRINITY.md](PORTABLE_TRINITY.md) · [playbooks/swarm-stalls-and-failover.md](playbooks/swarm-stalls-and-failover.md) |
+| `src/core/AgentInstaller.mjs`, `src/core/McpServer.mjs` | [api/cli.md](api/cli.md) · [adr/0008-non-destructive-agent-installer-and-safe-mcp.md](adr/0008-non-destructive-agent-installer-and-safe-mcp.md) · [playbooks/agent-drift-and-mcp-troubleshooting.md](playbooks/agent-drift-and-mcp-troubleshooting.md) |
 
 ## Infrastructure Adapters (`src/infrastructure/`)
 

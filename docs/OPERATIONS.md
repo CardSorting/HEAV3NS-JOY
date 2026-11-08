@@ -1,7 +1,7 @@
 <!-- [LAYER: UI] -->
 # Operations Runbook
 
-For people who **run** `joy`, `joy-check`, `joy-trinity`, or `joy mcp` in CI, hooks, or agent pipelines. Contributors should read [MAINTAINER.md](MAINTAINER.md) instead.
+For people who **run** `joy`, `joy-check`, `joy-trinity`, or `joy mcp` in CI, hooks, or agent pipelines. Contributors should read [MAINTAINER.md](MAINTAINER.md) instead. For symptom-specific step-by-step runbooks, see the [Operational Playbooks (`PB-01..05`)](playbooks/README.md), [Symptom Diagnosis Matrix](kb/symptom-diagnosis-matrix.md), and [Blameless Postmortems (`PM-001..005`)](postmortems/README.md).
 
 ## At a glance
 

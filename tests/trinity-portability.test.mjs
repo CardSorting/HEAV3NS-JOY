@@ -712,9 +712,16 @@ describe("Suite 22: LUMI-Style Documentation Strategy & Guardrails (runJoyDocsCh
   it("verifies all required docs, [LAYER] headers, docs/README.md sections, relative links, and live codebase metrics", () => {
     const result = runJoyDocsCheck(".");
     assert.equal(result.passed, true, JSON.stringify(result, null, 2));
-    assert.ok(result.requiredDocsChecked >= 27);
-    assert.ok(result.markdownFilesScanned >= 32);
-    assert.ok(result.linksChecked >= 100);
+    assert.equal(result.requiredDocsChecked, 74);
+    assert.ok(result.markdownFilesScanned >= 80);
+    assert.ok(result.linksChecked >= 500);
+    assert.deepEqual(result.taxonomyCounts, {
+      adrs: 9,
+      playbooks: 5,
+      wikiPages: 4,
+      postmortems: 5,
+      kbArticles: 3
+    });
     assert.equal(result.missingDocs.length, 0);
     assert.equal(result.missingHeaders.length, 0);
     assert.equal(result.missingSections.length, 0);

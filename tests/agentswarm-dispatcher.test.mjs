@@ -59,12 +59,24 @@ describe("Suite 26: AgentSwarm Services & Host-Agnostic Dispatcher", () => {
     const db = new BufferedDb({ store: new MemoryBufferedStore() });
     const knowledge = new SwarmKnowledgeService({ db });
     const now = 1_000_000;
+    assert.deepEqual(knowledge.diagnose(""), { ok: false, reason: "EMPTY_OR_NOT_STRING" });
+    assert.deepEqual(knowledge.diagnose("x".repeat(501)), { ok: false, reason: "TOO_LONG" });
+    assert.deepEqual(knowledge.diagnose("line1\nline2"), { ok: false, reason: "CONTROL_OR_MULTILINE" });
+    assert.deepEqual(knowledge.diagnose("my api_key is hunter2"), { ok: false, reason: "SENSITIVE_KEYWORD" });
+    assert.deepEqual(knowledge.diagnose("ghp_1234567890abcdef1234567890abcdef"), { ok: false, reason: "CREDENTIAL_PATTERN" });
+    assert.deepEqual(knowledge.diagnose("run pnpm check"), { ok: true });
     assert.equal(await knowledge.store("/ws/a", "stream", ["run pnpm check", "my api_key is hunter2", "run pnpm check"], now), 1);
     assert.equal(await knowledge.store("/ws/a", "stream", ["run pnpm check"], now + 5), 0, "live duplicates are skipped");
     assert.equal(await knowledge.store("/ws/b", "stream", ["only for b"], now), 1);
     assert.deepEqual((await knowledge.recall("/ws/a", now + 10)).map((o) => o.content), ["run pnpm check"]);
+    assert.deepEqual((await knowledge.search("/ws/a", "PNPM", now + 10)).map((o) => o.content), ["run pnpm check"]);
+    assert.deepEqual(await knowledge.search("/ws/a", "nonexistent", now + 10), []);
     assert.deepEqual((await knowledge.recall("/ws/b", now + 10)).map((o) => o.content), ["only for b"]);
     assert.deepEqual(await knowledge.recall("/ws/a", now + 31 * 24 * 60 * 60 * 1000), [], "expired observations are not recalled");
+    assert.deepEqual(await knowledge.prune("/ws/a", { query: "pnpm" }, now + 10), { removed: 1 });
+    assert.deepEqual(await knowledge.recall("/ws/a", now + 10), []);
+    assert.deepEqual(await knowledge.prune("/ws/b", { all: true }, now + 10), { removed: 1 });
+    assert.deepEqual(await knowledge.recall("/ws/b", now + 10), []);
     await db.stop();
   });
 
