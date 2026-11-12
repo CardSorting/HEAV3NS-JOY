@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- **Multi-lingual internationalization and README presentation overhaul**: Added 18 localized translation overviews in `docs/i18n/`, hero ASCII branding banner, visual architecture diagrams, and curated navigation to `README.md`.
 - **Unified `joy` CLI (`bin/joy.mjs`), `create-next-app`-style Agent Installer, MCP Server, Skills, `SOUL.md`, and Marketplace Plugin**:
   - `joy [init]`, `joy add`, `joy status`, `joy update`, `joy remove`, `joy doctor`, `joy agents`, `joy mcp`, `joy hook post-edit`, `joy completion`, and passthrough `joy check` / `joy trinity`.
   - Non-destructive installation across 8 agent targets (`claude`, `gemini`, `antigravity`, `cursor`, `copilot`, `windsurf`, `codex`, `cline`) using marker-delimited markdown blocks (`src/domain/managedBlock.mjs`), deep JSON key merges, SHA-256 drift manifest (`.joy/install.json`), and automatic conflict backups (`.joy/backup/`).
@@ -50,7 +51,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [1.0.0] - 2026-11-07
 
 ### Added
-
 - **Pass 1 — Joyzoning Core Engine & Zero-Harness Protocols (`src/domain/`, `src/core/`, `src/infrastructure/`, `src/plumbing/`, `src/ui/`)**:
   - Implemented the 5-zone architectural model (`DOMAIN`, `CORE`, `INFRASTRUCTURE`, `UI`, `PLUMBING`) with `0% I/O` domain purity and `[LAYER: <ZONE>]` header enforcement.
   - Created `SpiderEngine` (`src/core/SpiderEngine.mjs`) enforcing `SPI-101..108`, `SPI-201..209`, `SPI-301..303`, and `SPI-401..403` across 8 language families (`.ts/.js/.mjs/.cjs/.java`, `.go/.rs/.c/.cpp/.h/.proto`, `.py/.sh/.rb/.yaml/.yml`, `.sql/.lua/.hs`, `.md/.html/.vue/.svelte`).

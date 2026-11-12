@@ -222,7 +222,13 @@ export function resolveWorkspaceImportTarget(
 
     const buildRustCandidate = (moduleParts) => {
       if (moduleParts[0] === "crate") {
-        const importerRoot = importerPath.startsWith("src/") ? "src" : "";
+        const srcIdx = importerPath.indexOf("src/");
+        const importerRoot =
+          srcIdx !== -1
+            ? importerPath.slice(0, srcIdx + 3)
+            : importerPath.startsWith("src/")
+              ? "src"
+              : "";
         const relRust = moduleParts.slice(1).join("/");
         return importerRoot ? `${importerRoot}/${relRust}` : relRust;
       }
